@@ -1,0 +1,275 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "postgresql"
+    // NOTE: When using mysql or sqlserver, uncomment the @db.Text annotations in model Account below
+    // Further reading:
+    // https://next-auth.js.org/adapters/prisma#create-the-prisma-schema
+    // https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#string
+    url      = env("DATABASE_URL")
+}
+
+// Necessary for Next auth
+model Account {
+    id                       String  @id @default(cuid())
+    userId                   String
+    type                     String
+    provider                 String
+    providerAccountId        String
+    refresh_token            String? // @db.Text
+    access_token             String? // @db.Text
+    expires_at               Int?
+    token_type               String?
+    scope                    String?
+    id_token                 String? // @db.Text
+    session_state            String?
+    user                     User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+    refresh_token_expires_in Int?
+
+    @@unique([provider, providerAccountId])
+}
+
+model Session {
+    id           String   @id @default(cuid())
+    sessionToken String   @unique
+    userId       String
+    expires      DateTime
+    user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Organization {
+    id           String   @id @default(cuid())
+    name         String
+    country      String
+    logo         String?
+    contactEmail String?
+    createdAt    DateTime @default(now())
+    users        User[]
+    courses      Course[]
+}
+
+model User {
+    id             String        @id @default(cuid())
+    name           String?
+    email          String?       @unique
+    image          String?
+    organizationId String?
+    organization   Organization? @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+    accounts       Account[]
+    sessions       Session[]
+    student        Student?
+    professor      Professor?
+}
+
+model Student {
+    userId         String                 @id @unique
+    user           User                   @relation(fields: [userId], references: [id], onDelete: Cascade)
+    studentId      String
+    submissions    AssignmentSubmission[]
+    courses        CourseStudent[]
+    QuizSubmission QuizSubmission[]
+}
+
+model Professor {
+    userId            String            @id @unique
+    user              User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+    professorId       String
+    announcements     Annoucement[]
+    materialsPosted   Material[]
+    assignmentsPosted Assignment[]
+    courses           CourseProfessor[]
+}
+
+model Course {
+    id             String       @id @default(cuid())
+    name           String
+    description    String?
+    organizationId String
+    organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+    createdAt DateTime        @default(now())
+    sections  CourseSection[]
+}
+
+model CourseSection {
+    id            String    @id @default(cuid())
+    sectionNumber String
+    startDate     DateTime?
+    endDate       DateTime?
+
+    courseId      String
+    course        Course            @relation(fields: [courseId], references: [id], onDelete: Cascade)
+    announcements Annoucement[]
+    materials     Material[]
+    assignments   Assignment[]
+    students      CourseStudent[]
+    professors    CourseProfessor[]
+    Quiz          Quiz[]
+}
+
+model CourseStudent {
+    id       String   @id @default(cuid())
+    date     DateTime @default(now())
+    isActive Boolean  @default(true)
+
+    courseSectionId String
+    courseSection   CourseSection @relation(fields: [courseSectionId], references: [id], onDelete: Cascade)
+
+    studentId String
+    student   Student @relation(fields: [studentId], references: [userId], onDelete: Cascade)
+}
+
+model CourseProfessor {
+    id       String   @id @default(cuid())
+    date     DateTime @default(now())
+    isActive Boolean  @default(true)
+
+    courseSectionId String
+    courseSection   CourseSection @relation(fields: [courseSectionId], references: [id], onDelete: Cascade)
+
+    professorId String
+    professor   Professor @relation(fields: [professorId], references: [userId], onDelete: Cascade)
+}
+
+model Annoucement {
+    id          String   @id @default(cuid())
+    title       String
+    description String?
+    date        DateTime @default(now())
+
+    courseSectionId String
+    courseSection   CourseSection @relation(fields: [courseSectionId], references: [id], onDelete: Cascade)
+
+    authorId String
+    author   Professor @relation(fields: [authorId], references: [userId], onDelete: Cascade)
+}
+
+model Material {
+    id          String   @id @default(cuid())
+    title       String
+    isPublished Boolean  @default(false)
+    group       String?
+    date        DateTime @default(now())
+
+    courseSectionId String
+    courseSection   CourseSection @relation(fields: [courseSectionId], references: [id], onDelete: Cascade)
+
+    authorId String
+    author   Professor @relation(fields: [authorId], references: [userId], onDelete: Cascade)
+
+    file     String?
+    fileType String?
+    text     String?
+}
+
+model Assignment {
+    id          String    @id @default(cuid())
+    title       String
+    date        DateTime  @default(now())
+    dueDate     DateTime?
+    publishAt   DateTime?
+    isPublished Boolean   @default(false)
+    group       String?
+
+    courseSectionId String
+    courseSection   CourseSection @relation(fields: [courseSectionId], references: [id], onDelete: Cascade)
+
+    authorId String
+    author   Professor @relation(fields: [authorId], references: [userId], onDelete: Cascade)
+
+    file     String?
+    fileType String?
+    text     String?
+
+    maxAttempts Int?
+    points      Int
+
+    submissions AssignmentSubmission[]
+}
+
+model AssignmentSubmission {
+    id            String   @id @default(cuid())
+    date          DateTime @default(now())
+    file          String?
+    fileType      String?
+    text          String?
+    grade         Int?
+    feedback      String?
+    isGradePosted Boolean  @default(false)
+    attempt       Int      @default(0)
+
+    assignmentId String
+    assignment   Assignment @relation(fields: [assignmentId], references: [id], onDelete: Cascade)
+
+    studentId String
+    student   Student @relation(fields: [studentId], references: [userId], onDelete: Cascade)
+}
+
+model Quiz {
+    id          String  @id @default(cuid())
+    title       String
+    description String?
+
+    dueDate     DateTime?
+    publishAt   DateTime?
+    isPublished Boolean   @default(false)
+    group       String?
+
+    courseSectionId String
+    courseSection   CourseSection @relation(fields: [courseSectionId], references: [id], onDelete: Cascade)
+
+    maxAttempts    Int?
+    points         Int
+    QuizQuestion   QuizQuestion[]
+    QuizSubmission QuizSubmission[]
+}
+
+enum QuestionType {
+    MULTIPLE_CHOICE
+    TRUE_FALSE
+    SHORT_ANSWER
+}
+
+model QuizQuestion {
+    id       String       @id @default(cuid())
+    question String
+    type     QuestionType
+    points   Int
+    order    Int
+
+    quizId String
+    quiz   Quiz   @relation(fields: [quizId], references: [id], onDelete: Cascade)
+
+    answers QuizAnswer[]
+}
+
+model QuizAnswer {
+    id     String @id @default(cuid())
+    answer String
+    grade  Int?
+
+    quizQuestionId String
+    quizQuestion   QuizQuestion @relation(fields: [quizQuestionId], references: [id], onDelete: Cascade)
+}
+
+model QuizSubmission {
+    id            String    @id @default(cuid())
+    date          DateTime  @default(now())
+    grade         Int?
+    feedback      String?
+    isGradePosted Boolean   @default(false)
+    attempt       Int       @default(0)
+    startedAt     DateTime?
+    finishedAt    DateTime?
+
+    quizId String
+    quiz   Quiz   @relation(fields: [quizId], references: [id], onDelete: Cascade)
+
+    studentId String
+    student   Student @relation(fields: [studentId], references: [userId], onDelete: Cascade)
+}
