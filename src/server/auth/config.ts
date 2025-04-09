@@ -1,6 +1,6 @@
-import { PrismaAdapter } from "@auth/prisma-adapter";
 import { type DefaultSession, type NextAuthConfig } from "next-auth";
-import DiscordProvider from "next-auth/providers/discord";
+import Google from "next-auth/providers/google";
+import { PrismaAdapter } from "./adapter";
 
 import { db } from "~/server/db";
 
@@ -16,13 +16,16 @@ declare module "next-auth" {
       id: string;
       // ...other properties
       // role: UserRole;
+      admin?: { userId: string };
+      student?: { userId: string; studentId: string };
+      professor?: { userId: string; professorId: string };
     } & DefaultSession["user"];
   }
 
-  // interface User {
-  //   // ...other properties
-  //   // role: UserRole;
-  // }
+  interface User {
+    // ...other properties
+    // role: UserRole;
+  }
 }
 
 /**
@@ -32,7 +35,7 @@ declare module "next-auth" {
  */
 export const authConfig = {
   providers: [
-    DiscordProvider,
+    Google({ allowDangerousEmailAccountLinking: true }),
     /**
      * ...add more providers here.
      *
@@ -52,5 +55,10 @@ export const authConfig = {
         id: user.id,
       },
     }),
+    signIn: async ({ user, account, profile }) => {
+      if (!user.email) return false;
+      const exists = await db.user.findFirst({ where: { email: user.email } });
+      return Boolean(exists);
+    },
   },
 } satisfies NextAuthConfig;

@@ -56,7 +56,8 @@ model Organization {
 model User {
     id             String        @id @default(cuid())
     name           String?
-    email          String?       @unique
+    email          String        @unique
+    emailVerified  DateTime?
     image          String?
     organizationId String?
     organization   Organization? @relation(fields: [organizationId], references: [id], onDelete: Cascade)
@@ -64,6 +65,7 @@ model User {
     sessions       Session[]
     student        Student?
     professor      Professor?
+    admin          Admin?
 }
 
 model Student {
@@ -83,6 +85,11 @@ model Professor {
     materialsPosted   Material[]
     assignmentsPosted Assignment[]
     courses           CourseProfessor[]
+}
+
+model Admin {
+    userId String @id @unique
+    user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Course {
