@@ -53,4 +53,39 @@ export const studentsRouter = createTRPCRouter({
         },
       });
     }),
+
+  remove: protectedProcedure
+    .input(z.string())
+    .mutation(async ({ ctx, input }) => {
+      await ctx.db.user.delete({
+        where: {
+          id: input,
+        },
+      });
+    }),
+  update: protectedProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        name: z.string(),
+        email: z.string(),
+        studentId: z.string(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      await ctx.db.user.update({
+        where: {
+          id: input.id,
+        },
+        data: {
+          name: input.name,
+          email: input.email,
+          student: {
+            update: {
+              studentId: input.studentId,
+            },
+          },
+        },
+      });
+    }),
 });
