@@ -57,6 +57,12 @@ export const studentsRouter = createTRPCRouter({
   remove: protectedProcedure
     .input(z.string())
     .mutation(async ({ ctx, input }) => {
+      await ctx.db.student.delete({
+        where: {
+          userId: input,
+        },
+      });
+
       await ctx.db.user.delete({
         where: {
           id: input,

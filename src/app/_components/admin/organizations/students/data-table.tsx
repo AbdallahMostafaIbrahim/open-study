@@ -57,10 +57,7 @@ export function StudentsDataTable({ columns, data }: DataTableProps) {
               <TableRow
                 key={row.id}
                 data-state={row.getIsSelected() && "selected"}
-                className="hover:bg-muted/50 cursor-pointer"
-                onClick={() =>
-                  router.push(`/admin/student/${row.original.user.id}`)
-                }
+                className="hover:bg-muted/50"
               >
                 {row.getVisibleCells().map((cell) => (
                   <TableCell key={cell.id}>
