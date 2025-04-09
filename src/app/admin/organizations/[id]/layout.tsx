@@ -37,6 +37,10 @@ export default async function OrganizationLayout({
         <div>
           <h1 className="text-3xl font-bold">{organization.name}</h1>
           <p className="text-sm opacity-70">Country: {organization.country}</p>
+          <p className="text-sm opacity-70">
+            {organization._count.users} Student
+            {organization._count.users === 1 ? "" : "s"}{" "}
+          </p>
         </div>
       </div>
       <Separator className="my-4" />

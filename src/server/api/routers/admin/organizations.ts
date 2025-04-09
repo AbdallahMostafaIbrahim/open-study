@@ -27,6 +27,15 @@ export const organizationsRouter = createTRPCRouter({
   getOne: protectedProcedure.input(z.string()).query(async ({ ctx, input }) => {
     return await ctx.db.organization.findUnique({
       where: { id: input },
+      include: {
+        _count: {
+          select: {
+            users: {
+              where: { student: { isNot: null } },
+            },
+          },
+        },
+      },
     });
   }),
   create: protectedProcedure
