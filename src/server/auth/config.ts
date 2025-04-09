@@ -61,4 +61,5 @@ export const authConfig = {
       return Boolean(exists);
     },
   },
+  trustHost: true,
 } satisfies NextAuthConfig;

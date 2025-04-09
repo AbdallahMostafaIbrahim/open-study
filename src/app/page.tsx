@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
-import { LatestPost } from "~/app/_components/post";
 import { Logo } from "~/components/logo";
 import { SignOutButton } from "~/components/sign-out-button";
 import { Button } from "~/components/ui/button";

@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
-import { LatestPost } from "~/app/_components/post";
 import { Logo } from "~/components/logo";
 import { auth } from "~/server/auth";
 import { api, HydrateClient } from "~/trpc/server";
