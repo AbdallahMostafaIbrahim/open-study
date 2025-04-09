@@ -65,10 +65,9 @@ export const AddStudentDialog = ({
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Adding a New Organization</DialogTitle>
+          <DialogTitle>Adding a New Studen</DialogTitle>
           <DialogDescription>
-            This action cannot be undone. This will permanently delete your
-            account and remove your data from our servers.
+            Please fill in the details of the student you want to add.
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
@@ -80,7 +79,7 @@ export const AddStudentDialog = ({
                 <FormItem>
                   <FormLabel>Student Name</FormLabel>
                   <FormControl>
-                    <Input placeholder="shadcn" {...field} />
+                    <Input placeholder="Ali Khattab" {...field} />
                   </FormControl>
 
                   <FormMessage />
@@ -94,7 +93,10 @@ export const AddStudentDialog = ({
                 <FormItem>
                   <FormLabel>Student Email</FormLabel>
                   <FormControl>
-                    <Input placeholder="shadcn" {...field} />
+                    <Input
+                      placeholder="energysandwich@aucegypt.edu"
+                      {...field}
+                    />
                   </FormControl>
 
                   <FormMessage />
@@ -111,7 +113,7 @@ export const AddStudentDialog = ({
                     <span className="text-xs text-gray-700">(optional)</span>
                   </FormLabel>
                   <FormControl>
-                    <Input placeholder="shadcn" {...field} />
+                    <Input placeholder="900232544" {...field} />
                   </FormControl>
 
                   <FormMessage />

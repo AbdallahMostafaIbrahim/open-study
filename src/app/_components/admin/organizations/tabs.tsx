@@ -19,9 +19,6 @@ export const OrganizationTabs = ({ id }: { id: string }) => {
   return (
     <Tabs defaultValue={path}>
       <TabsList>
-        <TabsLinkTrigger href={`/admin/organizations/${id}`}>
-          Home
-        </TabsLinkTrigger>
         <TabsLinkTrigger href={`/admin/organizations/${id}/students`}>
           Students
         </TabsLinkTrigger>

@@ -22,12 +22,12 @@ export function SidebarDropdown({ username }: { username: string }) {
         side="top"
         className="w-[--radix-popper-anchor-width]"
       >
-        <DropdownMenuItem>
+        {/* <DropdownMenuItem>
           <span>Account</span>
         </DropdownMenuItem>
         <DropdownMenuItem>
           <span>Billing</span>
-        </DropdownMenuItem>
+        </DropdownMenuItem> */}
         <DropdownMenuItem
           onClick={async () => {
             await signOut();

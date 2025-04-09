@@ -17,35 +17,35 @@ import {
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
+import { Textarea } from "~/components/ui/textarea";
 import { api } from "~/trpc/react";
 
 const formSchema = z.object({
   name: z.string().min(1, { message: "name is required" }),
-  country: z.string().min(1, { message: "country is required" }),
-  contactEmail: z.string().email({ message: "email is required" }),
-  logo: z.string().optional(),
+  description: z.string().min(1, { message: "description is required" }),
 });
 
-export const AddOrganizationDialog = () => {
+export const AddCourseDialog = ({
+  organizationId,
+}: {
+  organizationId: string;
+}) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
-      country: "",
-      contactEmail: "",
-      logo: "",
+      description: "",
     },
   });
   const [open, setIsOpen] = useState(false);
   const router = useRouter();
-  const { isPending, mutate } = api.admin.organizations.create.useMutation({
+  const { isPending, mutate } = api.admin.courses.create.useMutation({
     onSuccess: () => {
       form.reset();
       setIsOpen(false);
@@ -54,18 +54,18 @@ export const AddOrganizationDialog = () => {
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    mutate(values);
+    mutate({ ...values, organizationId, sections: [] });
   }
   return (
     <Dialog open={open} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline">Add Organization</Button>
+        <Button variant="outline">Add Course</Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Adding a New Organization</DialogTitle>
+          <DialogTitle>Adding a New Course</DialogTitle>
           <DialogDescription>
-            Please fill in the details of the new organization.
+            Please fill out the form below to add a new course.
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
@@ -75,9 +75,9 @@ export const AddOrganizationDialog = () => {
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Organization Name</FormLabel>
+                  <FormLabel>Name</FormLabel>
                   <FormControl>
-                    <Input placeholder="AUC" {...field} />
+                    <Input placeholder="John Doe" {...field} />
                   </FormControl>
 
                   <FormMessage />
@@ -86,43 +86,15 @@ export const AddOrganizationDialog = () => {
             />
             <FormField
               control={form.control}
-              name="country"
+              name="description"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Organization Region</FormLabel>
+                  <FormLabel>Description</FormLabel>
                   <FormControl>
-                    <Input placeholder="Egypt" {...field} />
-                  </FormControl>
-
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="contactEmail"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Contact Email</FormLabel>
-                  <FormControl>
-                    <Input placeholder="contact@aucegypt.edu" {...field} />
-                  </FormControl>
-
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="logo"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>
-                    Organization Logo URL{" "}
-                    <span className="text-xs text-gray-700">(optional)</span>
-                  </FormLabel>
-                  <FormControl>
-                    <Input placeholder="Logo URL" {...field} />
+                    <Textarea
+                      placeholder="This course covers the fundamentals of software engineering"
+                      {...field}
+                    />
                   </FormControl>
 
                   <FormMessage />

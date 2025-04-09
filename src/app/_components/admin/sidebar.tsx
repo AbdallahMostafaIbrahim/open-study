@@ -1,4 +1,4 @@
-import { Hammer, Home, Settings } from "lucide-react";
+import { Hammer, Home, School, Settings } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { Logo } from "~/components/logo";
@@ -26,13 +26,13 @@ const items = [
   {
     title: "Organizations",
     url: "/admin/organizations",
-    icon: Hammer,
+    icon: School,
   },
-  {
-    title: "Admins",
-    url: "/settings",
-    icon: Settings,
-  },
+  // {
+  //   title: "Admins",
+  //   url: "/settings",
+  //   icon: Settings,
+  // },
 ];
 
 export async function AdminSidebar() {

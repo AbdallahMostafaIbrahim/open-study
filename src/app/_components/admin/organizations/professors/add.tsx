@@ -17,7 +17,6 @@ import {
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -28,24 +27,28 @@ import { api } from "~/trpc/react";
 
 const formSchema = z.object({
   name: z.string().min(1, { message: "name is required" }),
-  country: z.string().min(1, { message: "country is required" }),
-  contactEmail: z.string().email({ message: "email is required" }),
-  logo: z.string().optional(),
+  email: z.string().email({ message: "email is required" }),
+  professorId: z.string().min(1, {
+    message: "Professor Id is required",
+  }),
 });
 
-export const AddOrganizationDialog = () => {
+export const AddProfessorDialog = ({
+  organizationId,
+}: {
+  organizationId: string;
+}) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
-      country: "",
-      contactEmail: "",
-      logo: "",
+      email: "",
+      professorId: "",
     },
   });
   const [open, setIsOpen] = useState(false);
   const router = useRouter();
-  const { isPending, mutate } = api.admin.organizations.create.useMutation({
+  const { isPending, mutate } = api.admin.professors.create.useMutation({
     onSuccess: () => {
       form.reset();
       setIsOpen(false);
@@ -54,18 +57,19 @@ export const AddOrganizationDialog = () => {
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    mutate(values);
+    mutate({ ...values, organizationId });
   }
   return (
     <Dialog open={open} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline">Add Organization</Button>
+        <Button variant="outline">Add Professor</Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Adding a New Organization</DialogTitle>
+          <DialogTitle>Adding a New Professor</DialogTitle>
           <DialogDescription>
-            Please fill in the details of the new organization.
+            Please fill in the details of the new professor. You can always edit
+            them later.
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
@@ -75,9 +79,9 @@ export const AddOrganizationDialog = () => {
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Organization Name</FormLabel>
+                  <FormLabel>Name</FormLabel>
                   <FormControl>
-                    <Input placeholder="AUC" {...field} />
+                    <Input placeholder="John Doe" {...field} />
                   </FormControl>
 
                   <FormMessage />
@@ -86,12 +90,12 @@ export const AddOrganizationDialog = () => {
             />
             <FormField
               control={form.control}
-              name="country"
+              name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Organization Region</FormLabel>
+                  <FormLabel>Email</FormLabel>
                   <FormControl>
-                    <Input placeholder="Egypt" {...field} />
+                    <Input placeholder="johndoe@gmail.com" {...field} />
                   </FormControl>
 
                   <FormMessage />
@@ -100,36 +104,18 @@ export const AddOrganizationDialog = () => {
             />
             <FormField
               control={form.control}
-              name="contactEmail"
+              name="professorId"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Contact Email</FormLabel>
+                  <FormLabel>Professor ID</FormLabel>
                   <FormControl>
-                    <Input placeholder="contact@aucegypt.edu" {...field} />
+                    <Input placeholder="Professor ID/Faculty ID" {...field} />
                   </FormControl>
 
                   <FormMessage />
                 </FormItem>
               )}
             />
-            <FormField
-              control={form.control}
-              name="logo"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>
-                    Organization Logo URL{" "}
-                    <span className="text-xs text-gray-700">(optional)</span>
-                  </FormLabel>
-                  <FormControl>
-                    <Input placeholder="Logo URL" {...field} />
-                  </FormControl>
-
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
             <Button type="submit" disabled={isPending}>
               Submit
             </Button>

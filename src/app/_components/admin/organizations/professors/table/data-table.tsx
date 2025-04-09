@@ -15,11 +15,11 @@ import {
   TableHeader,
   TableRow,
 } from "~/components/ui/table";
-import type { Organization } from "./columns";
+import type { Professor } from "./columns";
 
 interface DataTableProps {
-  columns: ColumnDef<Organization>[];
-  data: Organization[];
+  columns: ColumnDef<Professor>[];
+  data: Professor[];
 }
 
 export function DataTable({ columns, data }: DataTableProps) {
@@ -58,7 +58,9 @@ export function DataTable({ columns, data }: DataTableProps) {
                 key={row.id}
                 data-state={row.getIsSelected() && "selected"}
                 className="hover:bg-muted/50 cursor-pointer"
-                onClick={() => router.push(`organizations/${row.original.id}`)}
+                onClick={() =>
+                  router.push(`professors/${row.original.user.id}`)
+                }
               >
                 {row.getVisibleCells().map((cell) => (
                   <TableCell key={cell.id}>

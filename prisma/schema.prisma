@@ -116,7 +116,7 @@ model CourseSection {
     assignments   Assignment[]
     students      CourseStudent[]
     professors    CourseProfessor[]
-    Quiz          Quiz[]
+    quizes        Quiz[]
 }
 
 model CourseStudent {

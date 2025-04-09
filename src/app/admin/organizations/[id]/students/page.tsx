@@ -14,9 +14,9 @@ export default async function OrganizationDetails({
   const { id } = await params;
   const students = await api.students.get(id);
   return (
-    <main className="p-6">
+    <main className="p-0">
       <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold">Students</h1>
+        <h1 className="text-xl font-bold">Students</h1>
         <AddStudentDialog organizationId={id} />
       </div>
       <div className="h-6"></div>

@@ -1,8 +1,14 @@
-export const Logo = ({ className }: { className: string }) => {
+export const Logo = ({
+  className,
+  size = 36,
+}: {
+  className?: string;
+  size?: number;
+}) => {
   return (
     <svg
-      width="36px"
-      height="36px"
+      width={size}
+      height={size}
       viewBox="0 0 1920 1920"
       xmlns="http://www.w3.org/2000/svg"
       className={className}
