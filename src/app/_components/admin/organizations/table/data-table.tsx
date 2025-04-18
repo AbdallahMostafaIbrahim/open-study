@@ -16,13 +16,14 @@ import {
   TableRow,
 } from "~/components/ui/table";
 import type { Organization } from "./columns";
+import { api } from "~/trpc/react";
 
 interface DataTableProps {
   columns: ColumnDef<Organization>[];
-  data: Organization[];
 }
 
-export function DataTable({ columns, data }: DataTableProps) {
+export function DataTable({ columns }: DataTableProps) {
+  const [data] = api.admin.organizations.get.useSuspenseQuery();
   const table = useReactTable({
     data,
     columns,
