@@ -7,7 +7,7 @@ import {
 } from "~/server/api/trpc";
 
 export const coursesRouter = createTRPCRouter({
-  get: protectedProcedure.input(z.string()).query(async ({ ctx, input }) => {
+  get: protectedProcedure.input(z.number()).query(async ({ ctx, input }) => {
     return await ctx.db.course.findMany({
       select: {
         id: true,
@@ -25,7 +25,7 @@ export const coursesRouter = createTRPCRouter({
       z.object({
         name: z.string(),
         description: z.string(),
-        organizationId: z.string(),
+        organizationId: z.number(),
         sections: z.array(
           z.object({
             sectionNumber: z.string(),
@@ -33,6 +33,7 @@ export const coursesRouter = createTRPCRouter({
             endDate: z.date(),
             professors: z.array(z.string()),
             students: z.array(z.string()),
+            semesterId: z.number(),
           }),
         ),
       }),
@@ -59,6 +60,7 @@ export const coursesRouter = createTRPCRouter({
                     id: studentId,
                   })),
                 },
+                semesterId: section.semesterId,
               })),
             },
           },

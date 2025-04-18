@@ -10,7 +10,7 @@ import {
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 export const studentsRouter = createTRPCRouter({
-  get: protectedProcedure.input(z.string()).query(async ({ ctx, input }) => {
+  get: protectedProcedure.input(z.number()).query(async ({ ctx, input }) => {
     return await ctx.db.student.findMany({
       select: {
         user: {
@@ -34,7 +34,7 @@ export const studentsRouter = createTRPCRouter({
       z.object({
         name: z.string(),
         email: z.string(),
-        organizationId: z.string(),
+        organizationId: z.number(),
         studentId: z.string(),
       }),
     )

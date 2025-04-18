@@ -1,18 +1,12 @@
 import { redirect } from "next/navigation";
-import { AddOrganizationDialog } from "~/app/_components/admin/organizations/add";
 
-import { columns } from "~/app/_components/admin/organizations/table/columns";
-import { DataTable } from "~/app/_components/admin/organizations/table/data-table";
 import { OrganizationTabs } from "~/app/_components/admin/organizations/tabs";
-import { CustomBreadcrumb } from "~/components/custom-breadcrumb";
 
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { Separator } from "~/components/ui/separator";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import { initials } from "~/lib/utils";
 
-import { auth } from "~/server/auth";
-import { api, HydrateClient } from "~/trpc/server";
+import { api } from "~/trpc/server";
 
 export default async function OrganizationLayout({
   params,
@@ -22,7 +16,7 @@ export default async function OrganizationLayout({
   children: React.ReactNode;
 }) {
   const { id } = await params;
-  const organization = await api.admin.organizations.getOne(id);
+  const organization = await api.admin.organizations.getOne(parseInt(id));
 
   if (!organization) {
     redirect("/admin/organizations");

@@ -36,7 +36,7 @@ const formSchema = z.object({
 export const AddStudentDialog = ({
   organizationId,
 }: {
-  organizationId: string;
+  organizationId: number;
 }) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),

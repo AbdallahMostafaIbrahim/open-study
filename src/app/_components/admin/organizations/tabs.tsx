@@ -13,11 +13,11 @@ const TabsLinkTrigger: React.FC<{
   </TabsTrigger>
 );
 
-export const OrganizationTabs = ({ id }: { id: string }) => {
+export const OrganizationTabs = ({ id }: { id: number }) => {
   const path = usePathname();
 
   return (
-    <Tabs defaultValue={path}>
+    <Tabs value={path}>
       <TabsList>
         <TabsLinkTrigger href={`/admin/organizations/${id}/students`}>
           Students

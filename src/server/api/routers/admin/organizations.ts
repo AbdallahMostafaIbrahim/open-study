@@ -22,7 +22,7 @@ export const organizationsRouter = createTRPCRouter({
       },
     });
   }),
-  getOne: protectedProcedure.input(z.string()).query(async ({ ctx, input }) => {
+  getOne: protectedProcedure.input(z.number()).query(async ({ ctx, input }) => {
     return await ctx.db.organization.findUnique({
       where: { id: input },
       include: {

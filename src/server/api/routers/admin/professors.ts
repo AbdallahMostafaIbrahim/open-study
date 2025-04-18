@@ -7,7 +7,7 @@ import {
 } from "~/server/api/trpc";
 
 export const professorsRouter = createTRPCRouter({
-  get: protectedProcedure.input(z.string()).query(async ({ ctx, input }) => {
+  get: protectedProcedure.input(z.number()).query(async ({ ctx, input }) => {
     return await ctx.db.professor.findMany({
       select: {
         user: {
@@ -24,7 +24,7 @@ export const professorsRouter = createTRPCRouter({
         email: z.string(),
         name: z.string(),
         professorId: z.string(),
-        organizationId: z.string(),
+        organizationId: z.number(),
       }),
     )
     .mutation(async ({ ctx, input }) => {

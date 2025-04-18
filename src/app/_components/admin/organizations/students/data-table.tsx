@@ -20,7 +20,7 @@ import { api } from "~/trpc/react";
 
 interface DataTableProps {
   columns: ColumnDef<Student>[];
-  id: string;
+  id: number;
 }
 
 export function StudentsDataTable({ columns, id }: DataTableProps) {

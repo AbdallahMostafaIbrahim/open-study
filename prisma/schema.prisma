@@ -43,7 +43,7 @@ model Session {
 }
 
 model Organization {
-    id           String      @id @default(cuid())
+    id           Int         @id @default(autoincrement())
     name         String
     country      String
     logo         String?
@@ -72,7 +72,7 @@ model Student {
     userId         String                 @id @unique
     user           User                   @relation(fields: [userId], references: [id], onDelete: Cascade)
     studentId      String
-    organizationId String
+    organizationId Int
     organization   Organization           @relation(fields: [organizationId], references: [id], onDelete: Cascade)
     submissions    AssignmentSubmission[]
     courses        CourseStudent[]
@@ -84,7 +84,7 @@ model Professor {
     user              User              @relation(fields: [userId], references: [id], onDelete: Cascade)
     professorId       String
     organization      Organization      @relation(fields: [organizationId], references: [id])
-    organizationId    String
+    organizationId    Int
     announcements     Annoucement[]
     materialsPosted   Material[]
     assignmentsPosted Assignment[]
@@ -97,10 +97,10 @@ model Admin {
 }
 
 model Course {
-    id             String       @id @default(cuid())
+    id             Int          @id @default(autoincrement())
     name           String
     description    String?
-    organizationId String
+    organizationId Int
     organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
 
     createdAt DateTime        @default(now())
@@ -108,12 +108,12 @@ model Course {
 }
 
 model CourseSection {
-    id            String    @id @default(cuid())
+    id            Int       @id @default(autoincrement())
     sectionNumber String
     startDate     DateTime?
     endDate       DateTime?
 
-    courseId      String
+    courseId      Int
     course        Course            @relation(fields: [courseId], references: [id], onDelete: Cascade)
     announcements Annoucement[]
     materials     Material[]
@@ -122,7 +122,7 @@ model CourseSection {
     professors    CourseProfessor[]
     quizes        Quiz[]
     semester      Semester          @relation(fields: [semesterId], references: [id])
-    semesterId    String
+    semesterId    Int
 }
 
 model CourseStudent {
@@ -130,7 +130,7 @@ model CourseStudent {
     date     DateTime @default(now())
     isActive Boolean  @default(true)
 
-    courseSectionId String
+    courseSectionId Int
     courseSection   CourseSection @relation(fields: [courseSectionId], references: [id], onDelete: Cascade)
 
     studentId String
@@ -142,7 +142,7 @@ model CourseProfessor {
     date     DateTime @default(now())
     isActive Boolean  @default(true)
 
-    courseSectionId String
+    courseSectionId Int
     courseSection   CourseSection @relation(fields: [courseSectionId], references: [id], onDelete: Cascade)
 
     professorId String
@@ -155,7 +155,7 @@ model Annoucement {
     description String?
     date        DateTime @default(now())
 
-    courseSectionId String
+    courseSectionId Int
     courseSection   CourseSection @relation(fields: [courseSectionId], references: [id], onDelete: Cascade)
 
     authorId String
@@ -169,7 +169,7 @@ model Material {
     group       String?
     date        DateTime @default(now())
 
-    courseSectionId String
+    courseSectionId Int
     courseSection   CourseSection @relation(fields: [courseSectionId], references: [id], onDelete: Cascade)
 
     authorId String
@@ -189,7 +189,7 @@ model Assignment {
     isPublished Boolean   @default(false)
     group       String?
 
-    courseSectionId String
+    courseSectionId Int
     courseSection   CourseSection @relation(fields: [courseSectionId], references: [id], onDelete: Cascade)
 
     authorId String
@@ -233,7 +233,7 @@ model Quiz {
     isPublished Boolean   @default(false)
     group       String?
 
-    courseSectionId String
+    courseSectionId Int
     courseSection   CourseSection @relation(fields: [courseSectionId], references: [id], onDelete: Cascade)
 
     maxAttempts    Int?
@@ -288,11 +288,11 @@ model QuizSubmission {
 }
 
 model Semester {
-    id             String          @id @default(cuid())
+    id             Int             @id @default(autoincrement())
     name           String
     startDate      DateTime?
     endDate        DateTime?
     organization   Organization    @relation(fields: [organizationId], references: [id])
-    organizationId String
+    organizationId Int
     sections       CourseSection[]
 }

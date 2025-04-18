@@ -7,17 +7,14 @@ import { redirect } from "next/navigation";
 import { SidebarInset, SidebarProvider } from "~/components/ui/sidebar";
 import { auth } from "~/server/auth";
 import { AdminSidebar } from "../_components/admin/sidebar";
+import { cookies } from "next/headers";
+import { ROLE_COOKIE, SIDEBAR_COOKIE } from "~/lib/constants";
 
 export const metadata: Metadata = {
   title: "Admin | Openstudy",
   description: "AI Powered LMS",
   icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
-
-const geist = Geist({
-  subsets: ["latin"],
-  variable: "--font-geist-sans",
-});
 
 export default async function RootLayout({
   children,
@@ -26,8 +23,11 @@ export default async function RootLayout({
 
   if (!session?.user.admin) return redirect("/auth/sign-in");
 
+  const cookieStore = await cookies();
+  const defaultOpen = cookieStore.get(SIDEBAR_COOKIE)?.value === "true";
+
   return (
-    <SidebarProvider>
+    <SidebarProvider defaultOpen={defaultOpen}>
       <AdminSidebar />
       <SidebarInset>{children}</SidebarInset>
     </SidebarProvider>
