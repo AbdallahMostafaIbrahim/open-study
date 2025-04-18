@@ -5,8 +5,8 @@ const client = new PrismaClient();
 const seed = async () => {
   await client.user.create({
     data: {
-      email: "yousefm@aucegypt.edu",
-      name: "Yousef Medhat", // Add name or any other required fields
+      email: "energysandwich@aucegypt.edu",
+      name: "Abdallah Mostafa", // Add name or any other required fields
       admin: { create: {} },
     },
   });

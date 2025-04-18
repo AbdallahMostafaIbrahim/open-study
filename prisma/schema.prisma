@@ -43,14 +43,15 @@ model Session {
 }
 
 model Organization {
-    id           String   @id @default(cuid())
+    id           String     @id @default(cuid())
     name         String
     country      String
     logo         String?
     contactEmail String?
-    createdAt    DateTime @default(now())
+    createdAt    DateTime   @default(now())
     users        User[]
     courses      Course[]
+    semesters    Semester[]
 }
 
 model User {
@@ -117,6 +118,8 @@ model CourseSection {
     students      CourseStudent[]
     professors    CourseProfessor[]
     quizes        Quiz[]
+    semester      Semester          @relation(fields: [semesterId], references: [id])
+    semesterId    String
 }
 
 model CourseStudent {
@@ -279,4 +282,14 @@ model QuizSubmission {
 
     studentId String
     student   Student @relation(fields: [studentId], references: [userId], onDelete: Cascade)
+}
+
+model Semester {
+    id             String          @id @default(cuid())
+    name           String
+    startDate      DateTime?
+    endDate        DateTime?
+    organization   Organization    @relation(fields: [organizationId], references: [id])
+    organizationId String
+    sections       CourseSection[]
 }
