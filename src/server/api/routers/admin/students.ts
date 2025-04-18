@@ -7,6 +7,8 @@ import {
   publicProcedure,
 } from "~/server/api/trpc";
 
+const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
 export const studentsRouter = createTRPCRouter({
   get: protectedProcedure.input(z.string()).query(async ({ ctx, input }) => {
     return await ctx.db.student.findMany({
@@ -16,16 +18,14 @@ export const studentsRouter = createTRPCRouter({
             name: true,
             email: true,
             image: true,
-            organization: true,
             id: true,
           },
         },
+        organization: true,
         studentId: true,
       },
       where: {
-        user: {
-          organizationId: input,
-        },
+        organizationId: input,
       },
     });
   }),
@@ -39,15 +39,39 @@ export const studentsRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      await ctx.db.user.create({
+      // Check if student already exists
+      const existingStudent = await ctx.db.student.findFirst({
+        where: {
+          user: { email: input.email },
+        },
+        select: {
+          organization: { select: { id: true } },
+          user: {
+            select: { id: true },
+          },
+        },
+      });
+
+      if (existingStudent) {
+        // Check if the user is already in the organization
+        if (existingStudent.organization.id !== input.organizationId) {
+          throw new Error("Student already exists in another organization");
+        } else {
+          throw new Error("Student already exists in this organization");
+        }
+      }
+
+      await ctx.db.student.create({
         data: {
-          name: input.name,
-          email: input.email,
-          image: null,
-          organizationId: input.organizationId,
-          student: {
-            create: {
-              studentId: input.studentId,
+          studentId: input.studentId,
+          organization: { connect: { id: input.organizationId } },
+          user: {
+            connectOrCreate: {
+              where: { email: input.email },
+              create: {
+                email: input.email,
+                name: input.name,
+              },
             },
           },
         },

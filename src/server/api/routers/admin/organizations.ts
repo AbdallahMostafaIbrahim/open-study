@@ -16,9 +16,7 @@ export const organizationsRouter = createTRPCRouter({
         contactEmail: true,
         _count: {
           select: {
-            users: {
-              where: { student: { isNot: null } },
-            },
+            students: true,
           },
         },
       },
@@ -30,9 +28,7 @@ export const organizationsRouter = createTRPCRouter({
       include: {
         _count: {
           select: {
-            users: {
-              where: { student: { isNot: null } },
-            },
+            students: true,
           },
         },
       },

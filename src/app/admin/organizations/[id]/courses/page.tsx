@@ -6,7 +6,17 @@ import { DataTable } from "~/app/_components/admin/organizations/courses/table/d
 import Link from "next/link";
 import { AddCourseDialog } from "~/app/_components/admin/organizations/courses/add";
 import { Button } from "~/components/ui/button";
-import { api } from "~/trpc/server";
+import { api, HydrateClient } from "~/trpc/server";
+import { Suspense } from "react";
+import TableSkeleton, {
+  type TableSkeletonProps,
+} from "~/components/table-skeleton";
+
+export const skeletonColumns: TableSkeletonProps["columns"] = [
+  { key: "name", width: "w-[150px]", align: "left" },
+  { key: "description", width: "w-[100px]", align: "left" },
+  { key: "sections", width: "w-[100px]", align: "left" },
+];
 
 export default async function Courses({
   params,
@@ -14,16 +24,20 @@ export default async function Courses({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const courses = await api.admin.courses.get(id);
+  void api.admin.courses.get.prefetch(id);
 
   return (
-    <main className="p-0">
-      <div className="flex items-center justify-between">
-        <h1 className="text-xl font-bold">Courses</h1>
-        <AddCourseDialog organizationId={id} />
-      </div>
-      <div className="h-6"></div>
-      <DataTable columns={columns} data={courses} />
-    </main>
+    <HydrateClient>
+      <main className="p-0">
+        <div className="flex items-center justify-between">
+          <h1 className="text-xl font-bold">Courses</h1>
+          <AddCourseDialog organizationId={id} />
+        </div>
+        <div className="h-6"></div>
+        <Suspense fallback={<TableSkeleton columns={skeletonColumns} />}>
+          <DataTable columns={columns} id={id} />
+        </Suspense>
+      </main>
+    </HydrateClient>
   );
 }

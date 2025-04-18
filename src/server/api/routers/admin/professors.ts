@@ -15,7 +15,7 @@ export const professorsRouter = createTRPCRouter({
         },
         _count: { select: { courses: true } },
       },
-      where: { user: { organizationId: input } },
+      where: { organizationId: input },
     });
   }),
   create: protectedProcedure
@@ -28,12 +28,41 @@ export const professorsRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      await ctx.db.user.create({
+      // Check if professor already exists
+      const existingProfessor = await ctx.db.professor.findFirst({
+        where: {
+          user: { email: input.email },
+        },
+        select: {
+          organization: { select: { id: true } },
+          user: {
+            select: { id: true },
+          },
+        },
+      });
+
+      if (existingProfessor) {
+        // Check if the user is already in the organization
+        if (existingProfessor.organization.id !== input.organizationId) {
+          throw new Error("Student already exists in another organization");
+        } else {
+          throw new Error("Student already exists in this organization");
+        }
+      }
+
+      await ctx.db.professor.create({
         data: {
-          email: input.email,
-          name: input.name,
-          organizationId: input.organizationId,
-          professor: { create: { professorId: input.professorId } },
+          professorId: input.professorId,
+          organization: { connect: { id: input.organizationId } },
+          user: {
+            connectOrCreate: {
+              where: { email: input.email },
+              create: {
+                email: input.email,
+                name: input.name,
+              },
+            },
+          },
         },
       });
     }),

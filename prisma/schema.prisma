@@ -43,36 +43,37 @@ model Session {
 }
 
 model Organization {
-    id           String     @id @default(cuid())
+    id           String      @id @default(cuid())
     name         String
     country      String
     logo         String?
     contactEmail String?
-    createdAt    DateTime   @default(now())
-    users        User[]
+    createdAt    DateTime    @default(now())
     courses      Course[]
     semesters    Semester[]
+    students     Student[]
+    professors   Professor[]
 }
 
 model User {
-    id             String        @id @default(cuid())
-    name           String?
-    email          String        @unique
-    emailVerified  DateTime?
-    image          String?
-    organizationId String?
-    organization   Organization? @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-    accounts       Account[]
-    sessions       Session[]
-    student        Student?
-    professor      Professor?
-    admin          Admin?
+    id            String     @id @default(cuid())
+    name          String?
+    email         String     @unique
+    emailVerified DateTime?
+    image         String?
+    accounts      Account[]
+    sessions      Session[]
+    student       Student?
+    professor     Professor?
+    admin         Admin?
 }
 
 model Student {
     userId         String                 @id @unique
     user           User                   @relation(fields: [userId], references: [id], onDelete: Cascade)
     studentId      String
+    organizationId String
+    organization   Organization           @relation(fields: [organizationId], references: [id], onDelete: Cascade)
     submissions    AssignmentSubmission[]
     courses        CourseStudent[]
     QuizSubmission QuizSubmission[]
@@ -82,6 +83,8 @@ model Professor {
     userId            String            @id @unique
     user              User              @relation(fields: [userId], references: [id], onDelete: Cascade)
     professorId       String
+    organization      Organization      @relation(fields: [organizationId], references: [id])
+    organizationId    String
     announcements     Annoucement[]
     materialsPosted   Material[]
     assignmentsPosted Assignment[]

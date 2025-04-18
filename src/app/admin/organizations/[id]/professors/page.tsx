@@ -1,9 +1,20 @@
+import { Suspense } from "react";
 import { AddProfessorDialog } from "~/app/_components/admin/organizations/professors/add";
 
 import { columns } from "~/app/_components/admin/organizations/professors/table/columns";
 import { DataTable } from "~/app/_components/admin/organizations/professors/table/data-table";
+import TableSkeleton, {
+  type TableSkeletonProps,
+} from "~/components/table-skeleton";
 
-import { api } from "~/trpc/server";
+import { api, HydrateClient } from "~/trpc/server";
+
+export const skeletonColumns: TableSkeletonProps["columns"] = [
+  { key: "name", width: "w-[150px]", align: "left" },
+  { key: "email", width: "w-[100px]", align: "left" },
+  { key: "professorId", width: "w-[100px]", align: "left" },
+  { key: "actions", width: "w-[100px]", align: "right" },
+];
 
 export default async function Professors({
   params,
@@ -11,16 +22,20 @@ export default async function Professors({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const professors = await api.admin.professors.get(id);
+  void api.admin.professors.get.prefetch(id);
 
   return (
-    <main className="p-0">
-      <div className="flex items-center justify-between">
-        <h1 className="text-xl font-bold">Professors</h1>
-        <AddProfessorDialog organizationId={id} />
-      </div>
-      <div className="h-6"></div>
-      <DataTable columns={columns} data={professors} />
-    </main>
+    <HydrateClient>
+      <main className="p-0">
+        <div className="flex items-center justify-between">
+          <h1 className="text-xl font-bold">Professors</h1>
+          <AddProfessorDialog organizationId={id} />
+        </div>
+        <div className="h-6"></div>
+        <Suspense fallback={<TableSkeleton columns={skeletonColumns} />}>
+          <DataTable columns={columns} id={id} />
+        </Suspense>
+      </main>
+    </HydrateClient>
   );
 }

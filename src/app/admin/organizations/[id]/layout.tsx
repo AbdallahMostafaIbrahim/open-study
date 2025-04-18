@@ -4,6 +4,7 @@ import { AddOrganizationDialog } from "~/app/_components/admin/organizations/add
 import { columns } from "~/app/_components/admin/organizations/table/columns";
 import { DataTable } from "~/app/_components/admin/organizations/table/data-table";
 import { OrganizationTabs } from "~/app/_components/admin/organizations/tabs";
+import { CustomBreadcrumb } from "~/components/custom-breadcrumb";
 
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { Separator } from "~/components/ui/separator";
@@ -38,8 +39,8 @@ export default async function OrganizationLayout({
           <h1 className="text-3xl font-bold">{organization.name}</h1>
           <p className="text-sm opacity-70">Country: {organization.country}</p>
           <p className="text-sm opacity-70">
-            {organization._count.users} Student
-            {organization._count.users === 1 ? "" : "s"}{" "}
+            {organization._count.students} Student
+            {organization._count.students === 1 ? "" : "s"}{" "}
           </p>
         </div>
       </div>

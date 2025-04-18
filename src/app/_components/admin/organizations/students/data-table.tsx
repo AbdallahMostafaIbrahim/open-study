@@ -16,13 +16,15 @@ import {
   TableRow,
 } from "~/components/ui/table";
 import type { Student } from "./columns";
+import { api } from "~/trpc/react";
 
 interface DataTableProps {
   columns: ColumnDef<Student>[];
-  data: Student[];
+  id: string;
 }
 
-export function StudentsDataTable({ columns, data }: DataTableProps) {
+export function StudentsDataTable({ columns, id }: DataTableProps) {
+  const [data] = api.students.get.useSuspenseQuery(id);
   const table = useReactTable({
     data,
     columns,

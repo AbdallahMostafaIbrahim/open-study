@@ -3,6 +3,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
 import { Button } from "~/components/ui/button";
 
@@ -52,6 +53,9 @@ export const AddStudentDialog = ({
       form.reset();
       setIsOpen(false);
       router.refresh();
+    },
+    onError(error, variables, context) {
+      toast.error(error.message);
     },
   });
 

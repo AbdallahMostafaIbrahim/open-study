@@ -21,6 +21,6 @@ export const columns: ColumnDef<Organization>[] = [
   {
     accessorKey: "_count",
     header: "Users",
-    cell: ({ row }) => row.original._count.users,
+    cell: ({ row }) => row.original._count.students,
   },
 ];
