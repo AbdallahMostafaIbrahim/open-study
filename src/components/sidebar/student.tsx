@@ -7,7 +7,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "~/components/ui/sidebar";
-import { Home, School } from "lucide-react";
+import { Bot, Calendar, Home, LibraryBig, Settings } from "lucide-react";
 import Link from "next/link";
 import { auth } from "~/server/auth";
 import { MySidebarHeader } from "./common/header";
@@ -17,23 +17,38 @@ import { MySidebarFooter } from "./common/footer";
 const items = [
   {
     title: "Home",
-    url: "/admin",
+    url: "/",
     icon: Home,
   },
   {
-    title: "Organizations",
-    url: "/admin/organizations",
-    icon: School,
+    title: "Courses",
+    url: "/courses",
+    icon: LibraryBig,
+  },
+  {
+    title: "Chatbot",
+    url: "/chat",
+    icon: Bot,
+  },
+  {
+    title: "Calendar",
+    url: "/calendar",
+    icon: Calendar,
+  },
+  {
+    title: "Settings",
+    url: "/settings",
+    icon: Settings,
   },
 ];
 
-export async function AdminSidebar() {
+export async function StudentSidebar() {
   const session = await auth();
   if (!session?.user) return null;
 
   return (
     <Sidebar collapsible="icon">
-      <MySidebarHeader defaultRole="admin" user={session.user} />
+      <MySidebarHeader defaultRole="student" user={session.user} />
 
       <SidebarContent>
         <SidebarGroup>

@@ -16,7 +16,7 @@ import { useRouter } from "next/navigation";
 const roleToLink: Record<Role, string> = {
   admin: "/admin",
   professor: "/professor",
-  student: "/student",
+  student: "/",
 };
 
 export function RoleSwitcher({
@@ -28,6 +28,8 @@ export function RoleSwitcher({
 }) {
   const [selectedRole, setSelectedRole] = React.useState(defaultRole);
   const router = useRouter();
+
+  if (roles.length < 2) return null; // No need to show the switcher if there's only one role.
 
   return (
     <SidebarMenuItem>

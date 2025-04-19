@@ -28,12 +28,7 @@ export default async function Home() {
         <h1 className="text-5xl font-bold">Open Study</h1>
       </div>
       <div className="h-6"></div>
-      <p className="w-1/2 text-center text-lg opacity-70">
-        Open Study is an LMS that allows you to create and manage your courses,
-        students, and professors while utilizing AI. It is designed to be simple
-        and easy to use, so you can focus on what matters most: teaching and
-        learning.
-      </p>
+      <p className="w-1/2 text-center text-lg opacity-70">Professor Page</p>
       <div className="h-4"></div>
       <SignOutButton />
     </main>
