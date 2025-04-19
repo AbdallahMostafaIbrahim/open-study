@@ -1,5 +1,6 @@
 import { create } from "domain";
 import { z } from "zod";
+import { deleteEmptyUser } from "~/lib/db/user";
 
 import {
   createTRPCRouter,
@@ -77,7 +78,6 @@ export const studentsRouter = createTRPCRouter({
         },
       });
     }),
-
   remove: protectedProcedure
     .input(z.string())
     .mutation(async ({ ctx, input }) => {
@@ -87,11 +87,7 @@ export const studentsRouter = createTRPCRouter({
         },
       });
 
-      await ctx.db.user.delete({
-        where: {
-          id: input,
-        },
-      });
+      await deleteEmptyUser(ctx.db, input);
     }),
   update: protectedProcedure
     .input(

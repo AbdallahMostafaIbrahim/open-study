@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { deleteEmptyUser } from "~/lib/db/user";
 
 import {
   createTRPCRouter,
@@ -65,5 +66,15 @@ export const professorsRouter = createTRPCRouter({
           },
         },
       });
+    }),
+  remove: protectedProcedure
+    .input(z.string())
+    .mutation(async ({ ctx, input }) => {
+      await ctx.db.professor.delete({
+        where: {
+          userId: input,
+        },
+      });
+      await deleteEmptyUser(ctx.db, input);
     }),
 });
