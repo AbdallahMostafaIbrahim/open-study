@@ -1,15 +1,7 @@
-import Link from "next/link";
-import { redirect } from "next/navigation";
-
 import { Logo } from "~/components/logo";
 import { SignOutButton } from "~/components/sign-out-button";
-import { Button } from "~/components/ui/button";
-import { auth, signOut } from "~/server/auth";
-import { api, HydrateClient } from "~/trpc/server";
 
 export default async function Home() {
-  const session = await auth();
-
   return (
     <main className="flex h-screen flex-col items-center justify-center">
       <div className="flex items-center justify-center gap-4">

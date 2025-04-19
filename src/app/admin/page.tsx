@@ -1,13 +1,7 @@
-import Link from "next/link";
-import { redirect } from "next/navigation";
-
 import { Logo } from "~/components/logo";
-import { auth } from "~/server/auth";
-import { api, HydrateClient } from "~/trpc/server";
+import { SignOutButton } from "~/components/sign-out-button";
 
 export default async function Home() {
-  const session = await auth();
-
   return (
     <main className="flex h-screen flex-col items-center justify-center">
       <div className="flex items-center justify-center gap-4">
@@ -21,6 +15,8 @@ export default async function Home() {
         and easy to use, so you can focus on what matters most: teaching and
         learning.
       </p>
+      <div className="h-4"></div>
+      <SignOutButton />
     </main>
   );
 }
