@@ -1,7 +1,7 @@
 import { Suspense } from "react";
-import { AddStudentDialog } from "~/app/_components/admin/organizations/students/add";
-import { columns } from "~/app/_components/admin/organizations/students/columns";
-import { StudentsDataTable } from "~/app/_components/admin/organizations/students/data-table";
+import { AddStudentDialog } from "./_components/add";
+import { columns } from "./_components/columns";
+import { StudentsDataTable } from "./_components/data-table";
 import TableSkeleton, {
   type TableSkeletonProps,
 } from "~/components/table-skeleton";

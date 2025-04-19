@@ -1,8 +1,5 @@
 import { MessageCircleQuestion } from "lucide-react";
-import { signIn } from "next-auth/react";
 import { redirect } from "next/navigation";
-import GoogleSignIn from "~/app/_components/auth/google";
-import { Button } from "~/components/ui/button";
 import {
   Card,
   CardContent,
@@ -12,6 +9,7 @@ import {
 } from "~/components/ui/card";
 import { NAME, VERSION } from "~/lib/constants";
 import { auth } from "~/server/auth";
+import GoogleSignIn from "./google";
 
 export default async function SignIn() {
   const session = await auth();

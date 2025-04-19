@@ -1,14 +1,13 @@
 import "~/styles/globals.css";
 
 import { type Metadata } from "next";
-import { Geist } from "next/font/google";
 
 import { redirect } from "next/navigation";
 import { SidebarInset, SidebarProvider } from "~/components/ui/sidebar";
 import { auth } from "~/server/auth";
-import { AdminSidebar } from "../_components/admin/sidebar";
 import { cookies } from "next/headers";
-import { ROLE_COOKIE, SIDEBAR_COOKIE } from "~/lib/constants";
+import { SIDEBAR_COOKIE } from "~/lib/constants";
+import { AdminSidebar } from "../../components/sidebar/admin";
 
 export const metadata: Metadata = {
   title: "Admin | Openstudy",

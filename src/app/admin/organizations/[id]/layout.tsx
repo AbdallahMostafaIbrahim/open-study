@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 
-import { OrganizationTabs } from "~/app/_components/admin/organizations/tabs";
+import { OrganizationTabs } from "./_components/tabs";
 
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { Separator } from "~/components/ui/separator";

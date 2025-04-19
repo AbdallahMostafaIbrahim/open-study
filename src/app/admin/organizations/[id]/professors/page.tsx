@@ -1,8 +1,8 @@
 import { Suspense } from "react";
-import { AddProfessorDialog } from "~/app/_components/admin/organizations/professors/add";
+import { AddProfessorDialog } from "./_components/add";
 
-import { columns } from "~/app/_components/admin/organizations/professors/table/columns";
-import { DataTable } from "~/app/_components/admin/organizations/professors/table/data-table";
+import { columns } from "./_components/table/columns";
+import { DataTable } from "./_components/table/data-table";
 import TableSkeleton, {
   type TableSkeletonProps,
 } from "~/components/table-skeleton";
