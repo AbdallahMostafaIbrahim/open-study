@@ -37,7 +37,9 @@ export default async function StudentLayout({
   }
 
   const cookieStore = await cookies();
-  const defaultOpen = cookieStore.get(SIDEBAR_COOKIE)?.value === "true";
+  const defaultOpen =
+    cookieStore.get(SIDEBAR_COOKIE)?.value === undefined ||
+    cookieStore.get(SIDEBAR_COOKIE)?.value === "true";
 
   return (
     <SidebarProvider defaultOpen={defaultOpen}>

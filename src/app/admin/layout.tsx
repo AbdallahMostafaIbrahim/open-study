@@ -24,7 +24,9 @@ export default async function AdminLayout({
   if (!session?.user.admin) return redirect("/");
 
   const cookieStore = await cookies();
-  const defaultOpen = cookieStore.get(SIDEBAR_COOKIE)?.value === "true";
+  const defaultOpen =
+    cookieStore.get(SIDEBAR_COOKIE)?.value === undefined ||
+    cookieStore.get(SIDEBAR_COOKIE)?.value === "true";
 
   return (
     <SidebarProvider defaultOpen={defaultOpen}>

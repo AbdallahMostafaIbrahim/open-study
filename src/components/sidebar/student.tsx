@@ -47,7 +47,7 @@ export async function StudentSidebar() {
   if (!session?.user) return null;
 
   return (
-    <Sidebar collapsible="icon">
+    <Sidebar>
       <MySidebarHeader defaultRole="student" user={session.user} />
 
       <SidebarContent>

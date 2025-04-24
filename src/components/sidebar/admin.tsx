@@ -32,7 +32,7 @@ export async function AdminSidebar() {
   if (!session?.user) return null;
 
   return (
-    <Sidebar collapsible="icon">
+    <Sidebar>
       <MySidebarHeader defaultRole="admin" user={session.user} />
 
       <SidebarContent>

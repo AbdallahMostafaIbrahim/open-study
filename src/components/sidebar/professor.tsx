@@ -42,7 +42,7 @@ export async function ProfessorSidebar() {
   if (!session?.user) return null;
 
   return (
-    <Sidebar collapsible="icon">
+    <Sidebar>
       <MySidebarHeader defaultRole="professor" user={session.user} />
 
       <SidebarContent>
