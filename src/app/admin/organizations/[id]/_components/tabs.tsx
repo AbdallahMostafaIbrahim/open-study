@@ -15,9 +15,12 @@ const TabsLinkTrigger: React.FC<{
 
 export const OrganizationTabs = ({ id }: { id: number }) => {
   const path = usePathname();
+  // make the path just the first 4 segments of the pathname
+  const pathSegments = path.split("/").slice(0, 5);
+  const fixedPath = pathSegments.join("/");
 
   return (
-    <Tabs value={path}>
+    <Tabs value={fixedPath}>
       <TabsList>
         <TabsLinkTrigger href={`/admin/organizations/${id}/students`}>
           Students

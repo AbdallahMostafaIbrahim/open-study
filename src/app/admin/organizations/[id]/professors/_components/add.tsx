@@ -28,9 +28,7 @@ import { api } from "~/trpc/react";
 const formSchema = z.object({
   name: z.string().min(1, { message: "name is required" }),
   email: z.string().email({ message: "email is required" }),
-  professorId: z.string().min(1, {
-    message: "Professor Id is required",
-  }),
+  professorId: z.string(),
 });
 
 export const AddProfessorDialog = ({
@@ -43,7 +41,6 @@ export const AddProfessorDialog = ({
     defaultValues: {
       name: "",
       email: "",
-      professorId: "",
     },
   });
   const [open, setIsOpen] = useState(false);
@@ -107,7 +104,10 @@ export const AddProfessorDialog = ({
               name="professorId"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Professor ID</FormLabel>
+                  <FormLabel>
+                    Professor ID
+                    <span className="text-xs text-gray-700">(optional)</span>
+                  </FormLabel>
                   <FormControl>
                     <Input placeholder="Professor ID/Faculty ID" {...field} />
                   </FormControl>

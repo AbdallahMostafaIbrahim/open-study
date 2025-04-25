@@ -1,11 +1,13 @@
 import { columns } from "./_components/table/columns";
 import { DataTable } from "./_components/table/data-table";
-import { AddCourseDialog } from "./_components/add";
+import { AddCourse } from "./_components/add/add";
 import { api, HydrateClient } from "~/trpc/server";
 import { Suspense } from "react";
 import TableSkeleton, {
   type TableSkeletonProps,
 } from "~/components/table-skeleton";
+import { Button } from "~/components/ui/button";
+import Link from "next/link";
 
 export const skeletonColumns: TableSkeletonProps["columns"] = [
   { key: "name", width: "w-[150px]", align: "left" },
@@ -27,7 +29,9 @@ export default async function Courses({
       <main className="p-0">
         <div className="flex items-center justify-between">
           <h1 className="text-xl font-bold">Courses</h1>
-          <AddCourseDialog organizationId={orgId} />
+          <Link href={`/admin/organizations/${orgId}/courses/new`}>
+            <Button variant="outline">Add Course</Button>
+          </Link>
         </div>
         <div className="h-2"></div>
         <Suspense fallback={<TableSkeleton columns={skeletonColumns} />}>

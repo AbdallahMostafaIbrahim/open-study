@@ -25,12 +25,11 @@ export const coursesRouter = createTRPCRouter({
       z.object({
         name: z.string(),
         description: z.string(),
+        courseCode: z.string().optional(),
         organizationId: z.number(),
         sections: z.array(
           z.object({
             sectionNumber: z.string(),
-            startDate: z.date(),
-            endDate: z.date(),
             professors: z.array(z.string()),
             students: z.array(z.string()),
             semesterId: z.number(),
@@ -39,32 +38,57 @@ export const coursesRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      await ctx.db.course.create({
-        data: {
-          name: input.name,
-          description: input.description,
-          organizationId: input.organizationId,
-          sections: {
-            createMany: {
-              data: input.sections.map((section) => ({
-                sectionNumber: section.sectionNumber,
-                startDate: section.startDate,
-                endDate: section.endDate,
-                professors: {
-                  connect: section.professors.map((professorId) => ({
-                    id: professorId,
-                  })),
-                },
-                students: {
-                  connect: section.students.map((studentId) => ({
-                    id: studentId,
-                  })),
-                },
-                semesterId: section.semesterId,
-              })),
-            },
+      // This is so hot
+      await ctx.db.$transaction(async (tx) => {
+        // Step 1: Create the course
+        const course = await tx.course.create({
+          data: {
+            name: input.name,
+            description: input.description,
+            courseCode: input.courseCode,
+            organizationId: input.organizationId,
           },
-        },
+        });
+
+        // Step 2: Create course sections with professors and students
+        for (const section of input.sections) {
+          // Create the section
+          const courseSection = await tx.courseSection.create({
+            data: {
+              sectionNumber: section.sectionNumber,
+              courseId: course.id,
+              semesterId: section.semesterId,
+            },
+          });
+
+          // Connect professors to the section
+          if (section.professors.length > 0) {
+            await Promise.all(
+              section.professors.map((professorId) =>
+                tx.courseProfessor.create({
+                  data: {
+                    courseSectionId: courseSection.id,
+                    professorId: professorId,
+                  },
+                }),
+              ),
+            );
+          }
+
+          // Connect students to the section
+          if (section.students.length > 0) {
+            await Promise.all(
+              section.students.map((studentId) =>
+                tx.courseStudent.create({
+                  data: {
+                    courseSectionId: courseSection.id,
+                    studentId: studentId,
+                  },
+                }),
+              ),
+            );
+          }
+        }
       });
     }),
 });

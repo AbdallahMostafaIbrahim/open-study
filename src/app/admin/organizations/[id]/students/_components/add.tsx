@@ -30,7 +30,7 @@ import { api } from "~/trpc/react";
 const formSchema = z.object({
   name: z.string().min(1, { message: "Name is required" }),
   email: z.string().email({ message: "Email is invalid" }),
-  studentId: z.string().min(1, { message: "Student ID is required" }),
+  studentId: z.string(),
 });
 
 export const AddStudentDialog = ({

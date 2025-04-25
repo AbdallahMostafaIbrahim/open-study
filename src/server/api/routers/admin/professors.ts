@@ -12,7 +12,7 @@ export const professorsRouter = createTRPCRouter({
     return await ctx.db.professor.findMany({
       select: {
         user: {
-          select: { id: true, email: true, name: true },
+          select: { id: true, email: true, name: true, image: true },
         },
         _count: { select: { courses: true } },
       },
