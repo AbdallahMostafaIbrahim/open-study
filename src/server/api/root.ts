@@ -11,7 +11,6 @@ import { studentsRouter } from "./routers/admin/students";
 export const appRouter = createTRPCRouter({
   post: postRouter,
   admin: adminRouter,
-  students: studentsRouter,
 });
 
 // export type definition of API

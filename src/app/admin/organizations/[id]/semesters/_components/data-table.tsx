@@ -15,22 +15,21 @@ import {
   TableHeader,
   TableRow,
 } from "~/components/ui/table";
-import type { Student } from "./columns";
+import type { Semester } from "./columns";
 import { api } from "~/trpc/react";
 
 interface DataTableProps {
-  columns: ColumnDef<Student>[];
+  columns: ColumnDef<Semester>[];
   id: number;
 }
 
-export function StudentsDataTable({ columns, id }: DataTableProps) {
-  const [data] = api.admin.students.get.useSuspenseQuery(id);
+export function SemestersDataTable({ columns, id }: DataTableProps) {
+  const [data] = api.admin.semesters.get.useSuspenseQuery(id);
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
   });
-  const router = useRouter();
 
   return (
     <div className="w-full rounded-md border">

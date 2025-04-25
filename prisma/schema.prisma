@@ -99,6 +99,7 @@ model Admin {
 model Course {
     id             Int          @id @default(autoincrement())
     name           String
+    courseCode     String?
     description    String?
     organizationId Int
     organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
@@ -108,10 +109,8 @@ model Course {
 }
 
 model CourseSection {
-    id            Int       @id @default(autoincrement())
+    id            Int    @id @default(autoincrement())
     sectionNumber String
-    startDate     DateTime?
-    endDate       DateTime?
 
     courseId      Int
     course        Course            @relation(fields: [courseId], references: [id], onDelete: Cascade)

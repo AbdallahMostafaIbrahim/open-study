@@ -28,6 +28,9 @@ export const OrganizationTabs = ({ id }: { id: number }) => {
         <TabsLinkTrigger href={`/admin/organizations/${id}/courses`}>
           Courses
         </TabsLinkTrigger>
+        <TabsLinkTrigger href={`/admin/organizations/${id}/semesters`}>
+          Semesters
+        </TabsLinkTrigger>
       </TabsList>
     </Tabs>
   );
