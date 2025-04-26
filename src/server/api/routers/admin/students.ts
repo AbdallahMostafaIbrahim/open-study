@@ -4,14 +4,14 @@ import { deleteEmptyUser } from "~/lib/db/user";
 
 import {
   createTRPCRouter,
-  protectedProcedure,
+  adminProcedure,
   publicProcedure,
 } from "~/server/api/trpc";
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 export const studentsRouter = createTRPCRouter({
-  get: protectedProcedure.input(z.number()).query(async ({ ctx, input }) => {
+  get: adminProcedure.input(z.number()).query(async ({ ctx, input }) => {
     return await ctx.db.student.findMany({
       select: {
         user: {
@@ -30,7 +30,7 @@ export const studentsRouter = createTRPCRouter({
       },
     });
   }),
-  create: protectedProcedure
+  create: adminProcedure
     .input(
       z.object({
         name: z.string(),
@@ -78,18 +78,16 @@ export const studentsRouter = createTRPCRouter({
         },
       });
     }),
-  remove: protectedProcedure
-    .input(z.string())
-    .mutation(async ({ ctx, input }) => {
-      await ctx.db.student.delete({
-        where: {
-          userId: input,
-        },
-      });
+  remove: adminProcedure.input(z.string()).mutation(async ({ ctx, input }) => {
+    await ctx.db.student.delete({
+      where: {
+        userId: input,
+      },
+    });
 
-      await deleteEmptyUser(ctx.db, input);
-    }),
-  update: protectedProcedure
+    await deleteEmptyUser(ctx.db, input);
+  }),
+  update: adminProcedure
     .input(
       z.object({
         id: z.string(),

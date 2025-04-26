@@ -1,8 +1,8 @@
 import { z } from "zod";
-import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
+import { createTRPCRouter, adminProcedure } from "~/server/api/trpc";
 
 export const semestersRouter = createTRPCRouter({
-  get: protectedProcedure.input(z.number()).query(async ({ ctx, input }) => {
+  get: adminProcedure.input(z.number()).query(async ({ ctx, input }) => {
     return await ctx.db.semester.findMany({
       select: {
         id: true,
@@ -16,7 +16,7 @@ export const semestersRouter = createTRPCRouter({
       },
     });
   }),
-  create: protectedProcedure
+  create: adminProcedure
     .input(
       z.object({
         name: z.string(),

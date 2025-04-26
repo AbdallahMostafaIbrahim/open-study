@@ -2,12 +2,12 @@ import { z } from "zod";
 
 import {
   createTRPCRouter,
-  protectedProcedure,
+  adminProcedure,
   publicProcedure,
 } from "~/server/api/trpc";
 
 export const organizationsRouter = createTRPCRouter({
-  get: protectedProcedure.query(async ({ ctx }) => {
+  get: adminProcedure.query(async ({ ctx }) => {
     return await ctx.db.organization.findMany({
       select: {
         id: true,
@@ -22,7 +22,7 @@ export const organizationsRouter = createTRPCRouter({
       },
     });
   }),
-  getOne: protectedProcedure.input(z.number()).query(async ({ ctx, input }) => {
+  getOne: adminProcedure.input(z.number()).query(async ({ ctx, input }) => {
     return await ctx.db.organization.findUnique({
       where: { id: input },
       include: {
@@ -34,7 +34,7 @@ export const organizationsRouter = createTRPCRouter({
       },
     });
   }),
-  create: protectedProcedure
+  create: adminProcedure
     .input(
       z.object({
         name: z.string().min(1),

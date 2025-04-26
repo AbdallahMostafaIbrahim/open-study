@@ -17,22 +17,22 @@ import { MySidebarFooter } from "./common/footer";
 const items = [
   {
     title: "Home",
-    url: "/",
+    url: "/professor",
     icon: Home,
   },
   {
     title: "Courses",
-    url: "/courses",
+    url: "/professor/courses",
     icon: LibraryBig,
   },
   {
     title: "Calendar",
-    url: "/calendar",
+    url: "/professor/calendar",
     icon: Calendar,
   },
   {
     title: "Settings",
-    url: "/settings",
+    url: "/professor/settings",
     icon: Settings,
   },
 ];

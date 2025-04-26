@@ -3,12 +3,12 @@ import { deleteEmptyUser } from "~/lib/db/user";
 
 import {
   createTRPCRouter,
-  protectedProcedure,
+  adminProcedure,
   publicProcedure,
 } from "~/server/api/trpc";
 
 export const professorsRouter = createTRPCRouter({
-  get: protectedProcedure.input(z.number()).query(async ({ ctx, input }) => {
+  get: adminProcedure.input(z.number()).query(async ({ ctx, input }) => {
     return await ctx.db.professor.findMany({
       select: {
         user: {
@@ -19,7 +19,7 @@ export const professorsRouter = createTRPCRouter({
       where: { organizationId: input },
     });
   }),
-  create: protectedProcedure
+  create: adminProcedure
     .input(
       z.object({
         email: z.string(),
@@ -67,14 +67,12 @@ export const professorsRouter = createTRPCRouter({
         },
       });
     }),
-  remove: protectedProcedure
-    .input(z.string())
-    .mutation(async ({ ctx, input }) => {
-      await ctx.db.professor.delete({
-        where: {
-          userId: input,
-        },
-      });
-      await deleteEmptyUser(ctx.db, input);
-    }),
+  remove: adminProcedure.input(z.string()).mutation(async ({ ctx, input }) => {
+    await ctx.db.professor.delete({
+      where: {
+        userId: input,
+      },
+    });
+    await deleteEmptyUser(ctx.db, input);
+  }),
 });

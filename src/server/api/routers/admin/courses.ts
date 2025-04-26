@@ -2,12 +2,12 @@ import { z } from "zod";
 
 import {
   createTRPCRouter,
-  protectedProcedure,
+  adminProcedure,
   publicProcedure,
 } from "~/server/api/trpc";
 
 export const coursesRouter = createTRPCRouter({
-  get: protectedProcedure.input(z.number()).query(async ({ ctx, input }) => {
+  get: adminProcedure.input(z.number()).query(async ({ ctx, input }) => {
     return await ctx.db.course.findMany({
       select: {
         id: true,
@@ -20,7 +20,7 @@ export const coursesRouter = createTRPCRouter({
       },
     });
   }),
-  create: protectedProcedure
+  create: adminProcedure
     .input(
       z.object({
         name: z.string(),
