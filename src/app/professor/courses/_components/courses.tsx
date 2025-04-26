@@ -17,6 +17,11 @@ export function CoursesList() {
 
   return (
     <div className="flex flex-wrap gap-4">
+      {data.length === 0 && (
+        <p className="text-muted-foreground text-sm">
+          You are not teaching any courses this semester.
+        </p>
+      )}
       {data.map((course) => (
         <Link
           key={course.id}

@@ -6,11 +6,12 @@ import { redirect } from "next/navigation";
 import { SidebarInset, SidebarProvider } from "~/components/ui/sidebar";
 import { auth } from "~/server/auth";
 import { cookies } from "next/headers";
-import { SIDEBAR_COOKIE } from "~/lib/constants";
+import { NAME, SIDEBAR_COOKIE } from "~/lib/constants";
 import { ProfessorSidebar } from "~/components/sidebar/professor";
+import { ProfessorNavbar } from "~/components/navbar/professor";
 
 export const metadata: Metadata = {
-  title: "Professor | Openstudy",
+  title: `Professor | ${NAME}`,
   description: "AI Powered LMS",
   icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
@@ -31,7 +32,10 @@ export default async function ProfessorLayout({
   return (
     <SidebarProvider defaultOpen={defaultOpen}>
       <ProfessorSidebar />
-      <SidebarInset>{children}</SidebarInset>
+      <SidebarInset>
+        <ProfessorNavbar />
+        {children}
+      </SidebarInset>
     </SidebarProvider>
   );
 }

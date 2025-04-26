@@ -6,9 +6,10 @@ import { Geist } from "next/font/google";
 import HolyLoader from "holy-loader";
 import { Toaster } from "sonner";
 import { TRPCReactProvider } from "~/trpc/react";
+import { NAME } from "~/lib/constants";
 
 export const metadata: Metadata = {
-  title: "Openstudy",
+  title: NAME,
   description: "AI Powered LMS",
   icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
