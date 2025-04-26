@@ -1,13 +1,7 @@
-import { z } from "zod";
-
-import {
-  createTRPCRouter,
-  adminProcedure,
-  publicProcedure,
-} from "~/server/api/trpc";
+import { createTRPCRouter, professorProcedure } from "~/server/api/trpc";
 
 export const coursesRouter = createTRPCRouter({
-  get: adminProcedure.query(async ({ ctx, input }) => {
+  get: professorProcedure.query(async ({ ctx, input }) => {
     return await ctx.db.courseSection.findMany({
       select: {
         id: true,
@@ -17,6 +11,7 @@ export const coursesRouter = createTRPCRouter({
           select: {
             id: true,
             name: true,
+            description: true,
             courseCode: true,
           },
         },
@@ -24,7 +19,7 @@ export const coursesRouter = createTRPCRouter({
       where: {
         professors: {
           some: {
-            id: ctx.session.user.id,
+            professorId: ctx.session.user.id,
           },
         },
       },

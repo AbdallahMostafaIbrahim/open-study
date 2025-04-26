@@ -17,8 +17,12 @@ declare module "next-auth" {
       // ...other properties
       // role: UserRole;
       admin?: { userId: string };
-      student?: { userId: string; studentId: string };
-      professor?: { userId: string; professorId: string };
+      student?: { userId: string; studentId: string; organizationId: number };
+      professor?: {
+        userId: string;
+        professorId: string;
+        organizationId: number;
+      };
     } & DefaultSession["user"];
   }
 
