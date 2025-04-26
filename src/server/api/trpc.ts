@@ -152,7 +152,13 @@ export const adminProcedure = t.procedure
     return next({
       ctx: {
         // infers the `session` as non-nullable
-        session: { ...ctx.session, user: ctx.session.user },
+        session: {
+          ...ctx.session,
+          user: {
+            ...ctx.session.user,
+            admin: ctx.session.user.admin,
+          },
+        },
       },
     });
   });
@@ -205,7 +211,13 @@ export const studentProcedure = t.procedure
     return next({
       ctx: {
         // infers the `session` as non-nullable
-        session: { ...ctx.session, user: ctx.session.user },
+        session: {
+          ...ctx.session,
+          user: {
+            ...ctx.session.user,
+            student: ctx.session.user.student,
+          },
+        },
       },
     });
   });
