@@ -44,6 +44,7 @@ import {
   type SelectedPerson,
 } from "./schema";
 import { api } from "~/trpc/react";
+import { useRouter } from "next/navigation";
 
 // Helper function to get initials from name
 function getInitials(name: string): string {
@@ -67,6 +68,13 @@ export const SectionForm = ({ onSubmit, organizationId }: SectionFormProps) => {
     api.admin.students.get.useQuery(organizationId);
   const { data: semesters = [] } =
     api.admin.semesters.get.useQuery(organizationId);
+
+  const avaialbleSemesters = semesters?.filter(
+    (semester) =>
+      (!semester.startDate || new Date(semester.startDate) <= new Date()) &&
+      (!semester.endDate || new Date(semester.endDate) >= new Date()),
+  );
+  const router = useRouter();
 
   const [selectedProfessors, setSelectedProfessors] = useState<
     SelectedPerson[]
@@ -171,7 +179,19 @@ export const SectionForm = ({ onSubmit, organizationId }: SectionFormProps) => {
               <FormItem>
                 <FormLabel>Semester</FormLabel>
                 <Select
-                  onValueChange={(value) => field.onChange(parseInt(value))}
+                  onValueChange={(value) => {
+                    if (value === "add-semester") {
+                      window
+                        .open(
+                          `/admin/organizations/${organizationId}/semesters/`,
+                          "_blank",
+                        )
+                        ?.focus();
+                      return;
+                    }
+                    field.onChange(parseInt(value));
+                  }}
+                  value={field.value?.toString()}
                   defaultValue={
                     field.value ? field.value.toString() : undefined
                   }
@@ -182,22 +202,19 @@ export const SectionForm = ({ onSubmit, organizationId }: SectionFormProps) => {
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    {semesters
-                      ?.filter(
-                        (semester) =>
-                          (!semester.startDate ||
-                            new Date(semester.startDate) <= new Date()) &&
-                          (!semester.endDate ||
-                            new Date(semester.endDate) >= new Date()),
-                      )
-                      .map((semester) => (
-                        <SelectItem
-                          key={semester.id}
-                          value={semester.id.toString()}
-                        >
-                          {semester.name}
-                        </SelectItem>
-                      ))}
+                    {avaialbleSemesters.map((semester) => (
+                      <SelectItem
+                        key={semester.id}
+                        value={semester.id.toString()}
+                      >
+                        {semester.name}
+                      </SelectItem>
+                    ))}
+                    {semesters.length === 0 && (
+                      <SelectItem value="add-semester">
+                        Add a new semester
+                      </SelectItem>
+                    )}
                   </SelectContent>
                 </Select>
                 <FormMessage />

@@ -41,6 +41,7 @@ export const AddProfessorDialog = ({
     defaultValues: {
       name: "",
       email: "",
+      professorId: "",
     },
   });
   const [open, setIsOpen] = useState(false);
