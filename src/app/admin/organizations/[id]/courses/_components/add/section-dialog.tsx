@@ -1,16 +1,15 @@
 "use client";
-
 import { useState } from "react";
 import { Plus } from "lucide-react";
 import { Button } from "~/components/ui/button";
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "~/components/ui/dialog";
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "~/components/ui/sheet";
 import type { SectionFormValues } from "./schema";
 import { SectionForm } from "./section-form";
 
@@ -31,24 +30,29 @@ export const SectionDialog = ({
   }
 
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger asChild>
+    <Sheet open={isOpen} onOpenChange={setIsOpen}>
+      <SheetTrigger asChild>
         <Button type="button" size="sm">
           <Plus className="mr-2 h-4 w-4" />
           Add Section
         </Button>
-      </DialogTrigger>
-      <DialogContent className="max-w-2xl">
-        <DialogHeader>
-          <DialogTitle>Add Course Section</DialogTitle>
-          <DialogDescription>
+      </SheetTrigger>
+      <SheetContent>
+        <SheetHeader>
+          <SheetTitle>Add Course Section</SheetTitle>
+          <SheetDescription>
             Create a new section for this course with assigned professors and
             students.
-          </DialogDescription>
-        </DialogHeader>
+          </SheetDescription>
+        </SheetHeader>
 
-        <SectionForm organizationId={organizationId} onSubmit={handleSubmit} />
-      </DialogContent>
-    </Dialog>
+        <div className="p-4">
+          <SectionForm
+            organizationId={organizationId}
+            onSubmit={handleSubmit}
+          />
+        </div>
+      </SheetContent>
+    </Sheet>
   );
 };

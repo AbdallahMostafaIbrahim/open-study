@@ -1,3 +1,4 @@
+import { z } from "zod";
 import { createTRPCRouter, professorProcedure } from "~/server/api/trpc";
 
 export const coursesRouter = createTRPCRouter({
@@ -20,6 +21,38 @@ export const coursesRouter = createTRPCRouter({
         professors: {
           some: {
             professorId: ctx.session.user.id,
+          },
+        },
+      },
+    });
+  }),
+  getOne: professorProcedure.input(z.number()).query(async ({ ctx, input }) => {
+    return await ctx.db.courseSection.findUnique({
+      where: {
+        id: input,
+        professors: { some: { professorId: ctx.session.user.id } },
+      },
+      include: {
+        course: true,
+        professors: {
+          select: {
+            id: true,
+            isActive: true,
+            type: true,
+            professor: {
+              select: {
+                user: { select: { name: true, email: true } },
+                professorId: true,
+              },
+            },
+          },
+        },
+        _count: {
+          select: {
+            students: true,
+            materials: true,
+            assignments: true,
+            quizes: true,
           },
         },
       },

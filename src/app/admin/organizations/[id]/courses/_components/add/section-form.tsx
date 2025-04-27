@@ -237,7 +237,7 @@ export const SectionForm = ({ onSubmit, organizationId }: SectionFormProps) => {
                 <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
               </Button>
             </PopoverTrigger>
-            <PopoverContent removePortal className="w-full p-0">
+            <PopoverContent className="w-full p-0">
               <Command>
                 <CommandInput placeholder="Search professors..." />
                 <CommandEmpty>No professor found.</CommandEmpty>
@@ -245,7 +245,7 @@ export const SectionForm = ({ onSubmit, organizationId }: SectionFormProps) => {
                   {professors?.map((professor) => (
                     <CommandItem
                       key={professor.user.id}
-                      value={professor.user.id}
+                      value={professor.user.name || professor.user.email}
                       onSelect={() =>
                         handleProfessorSelection(professor.user.id)
                       }
@@ -335,7 +335,7 @@ export const SectionForm = ({ onSubmit, organizationId }: SectionFormProps) => {
                 <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
               </Button>
             </PopoverTrigger>
-            <PopoverContent removePortal className="w-full p-0">
+            <PopoverContent className="w-full p-0">
               <Command>
                 <CommandInput placeholder="Search students..." />
                 <CommandEmpty>No student found.</CommandEmpty>
@@ -343,7 +343,7 @@ export const SectionForm = ({ onSubmit, organizationId }: SectionFormProps) => {
                   {students?.map((student) => (
                     <CommandItem
                       key={student.user.id}
-                      value={student.user.id}
+                      value={student.user.name || student.user.email}
                       onSelect={() => handleStudentSelection(student.user.id)}
                       disabled={selectedStudents.some(
                         (s) => s.id === student.user.id,
