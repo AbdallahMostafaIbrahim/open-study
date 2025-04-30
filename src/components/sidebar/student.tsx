@@ -1,3 +1,5 @@
+import { Bot, Calendar, Home, LibraryBig, Settings } from "lucide-react";
+import Link from "next/link";
 import {
   Sidebar,
   SidebarContent,
@@ -7,11 +9,9 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "~/components/ui/sidebar";
-import { Bot, Calendar, Home, LibraryBig, Settings } from "lucide-react";
-import Link from "next/link";
 import { auth } from "~/server/auth";
-import { MySidebarHeader } from "./common/header";
 import { MySidebarFooter } from "./common/footer";
+import { MySidebarHeader } from "./common/header";
 
 // Menu items.
 const items = [

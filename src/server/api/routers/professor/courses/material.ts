@@ -6,7 +6,12 @@ export const materialRouter = createTRPCRouter({
     .input(z.object({ sectionId: z.number() }))
     .query(async ({ ctx, input }) => {
       return await ctx.db.material.findMany({
-        where: { courseSectionId: input.sectionId },
+        where: {
+          courseSectionId: input.sectionId,
+          courseSection: {
+            professors: { some: { professorId: ctx.session.user.id } },
+          },
+        },
         select: {
           id: true,
           title: true,
@@ -23,7 +28,12 @@ export const materialRouter = createTRPCRouter({
     .input(z.object({ sectionId: z.number() }))
     .query(async ({ ctx, input }) => {
       return await ctx.db.material.findMany({
-        where: { courseSectionId: input.sectionId },
+        where: {
+          courseSectionId: input.sectionId,
+          courseSection: {
+            professors: { some: { professorId: ctx.session.user.id } },
+          },
+        },
         select: { group: true },
         distinct: ["group"],
       });
