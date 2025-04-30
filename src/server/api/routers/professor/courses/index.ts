@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { createTRPCRouter, professorProcedure } from "~/server/api/trpc";
+import { materialRouter } from "./material";
 
 export const coursesRouter = createTRPCRouter({
   get: professorProcedure.query(async ({ ctx, input }) => {
@@ -58,4 +59,5 @@ export const coursesRouter = createTRPCRouter({
       },
     });
   }),
+  material: materialRouter,
 });

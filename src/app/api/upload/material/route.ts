@@ -5,8 +5,6 @@ import { auth } from "~/server/auth";
 import { api } from "~/trpc/server";
 
 const schema = z.object({
-  filename: z.string(),
-  fileType: z.string(),
   sectionId: z.number(),
 });
 
@@ -26,7 +24,7 @@ export async function POST(request: NextRequest) {
         error: "Invalid request body",
       });
     }
-    const { filename, fileType, sectionId } = data;
+    const { sectionId } = data;
 
     try {
       const section = await api.professor.courses.getOne(sectionId);

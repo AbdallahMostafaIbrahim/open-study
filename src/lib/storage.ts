@@ -21,7 +21,7 @@ export async function getS3PresignedURL({
 }: UploadToS3Params): Promise<{ uploadUrl: string; fileKey: string }> {
   const fileKey = `${folder}/${uuid()}`;
   const putCommand = new PutObjectCommand({
-    Bucket: env.S3_BUCKET_NAME,
+    Bucket: env.NEXT_PUBLIC_S3_BUCKET_NAME,
     Key: fileKey,
   });
   try {

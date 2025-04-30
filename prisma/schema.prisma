@@ -181,9 +181,18 @@ model Material {
     authorId String
     author   Professor @relation(fields: [authorId], references: [userId], onDelete: Cascade)
 
-    file     String?
-    fileType String?
-    text     String?
+    text  String?
+    files MaterialFile[]
+}
+
+model MaterialFile {
+    id   String  @id @default(cuid())
+    name String?
+    type String?
+    link String
+
+    material   Material? @relation(fields: [materialId], references: [id])
+    materialId String?
 }
 
 model Assignment {
