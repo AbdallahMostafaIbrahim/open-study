@@ -1,6 +1,5 @@
 import { columns } from "./_components/table/columns";
 import { DataTable } from "./_components/table/data-table";
-import { AddCourse } from "./_components/add/add";
 import { api, HydrateClient } from "~/trpc/server";
 import { Suspense } from "react";
 import TableSkeleton, {
