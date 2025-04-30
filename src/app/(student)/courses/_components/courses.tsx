@@ -42,12 +42,6 @@ export function CoursesList() {
                 {course.course.description || "No description available."}
               </p>
             </CardContent>
-
-            <CardFooter className="flex items-center justify-between">
-              <div className="transform transition-transform group-hover:translate-x-1">
-                <ArrowRight className="h-4 w-4" />
-              </div>
-            </CardFooter>
           </Card>
         </Link>
       ))}
