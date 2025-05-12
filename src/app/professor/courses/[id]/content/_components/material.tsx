@@ -1,18 +1,19 @@
 "use client";
 
-import { useState } from "react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { Card, CardHeader, CardTitle, CardContent } from "~/components/ui/card";
-import { Button } from "~/components/ui/button";
-import { api } from "~/trpc/react";
 import {
+  BookOpen,
   ChevronDown,
   ChevronUp,
   FolderOpen,
   Plus,
-  BookOpen,
 } from "lucide-react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useState } from "react";
+import { Button } from "~/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
+import { formatDate } from "~/lib/utils";
+import { api } from "~/trpc/react";
 
 export const CourseMaterial = ({ sectionId }: { sectionId: number }) => {
   // Get all materials for this section
@@ -43,16 +44,6 @@ export const CourseMaterial = ({ sectionId }: { sectionId: number }) => {
       ...prev,
       [group]: !prev[group],
     }));
-  };
-
-  // Function to format date in a more readable way
-  const formatDate = (dateString: string | Date) => {
-    const date = new Date(dateString);
-    return new Intl.DateTimeFormat("en-US", {
-      month: "short",
-      day: "numeric",
-      year: "numeric",
-    }).format(date);
   };
 
   // Render the add material button

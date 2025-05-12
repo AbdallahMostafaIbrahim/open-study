@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
+import { cn, formatDate } from "~/lib/utils";
 import { api } from "~/trpc/react";
 
 export const Assignments = ({ sectionId }: { sectionId: number }) => {
@@ -13,16 +14,6 @@ export const Assignments = ({ sectionId }: { sectionId: number }) => {
     api.student.courses.assignments.get.useSuspenseQuery({
       sectionId,
     });
-
-  // Function to format date in a more readable way
-  const formatDate = (dateString: string | Date) => {
-    const date = new Date(dateString);
-    return new Intl.DateTimeFormat("en-US", {
-      month: "short",
-      day: "numeric",
-      year: "numeric",
-    }).format(date);
-  };
 
   // Empty state component
   const EmptyState = () => (
@@ -87,7 +78,12 @@ export const Assignments = ({ sectionId }: { sectionId: number }) => {
                   <div className="flex gap-4">
                     <div className="flex items-center text-sm">
                       <Calendar className="text-muted-foreground mr-1.5 h-4 w-4" />
-                      <span className="font-semibold">
+                      <span
+                        className={cn(
+                          "font-semibold",
+                          item.dueDate ? "" : "text-muted-foreground",
+                        )}
+                      >
                         Due: {item.dueDate ? formatDate(item.dueDate) : "None"}
                       </span>
                     </div>
@@ -98,7 +94,8 @@ export const Assignments = ({ sectionId }: { sectionId: number }) => {
                   </div>
                   {item.grades.length > 0 && (
                     <Badge variant="outline">
-                      {item.grades[item.grades.length - 1]?.grade} Points
+                      {item.grades[item.grades.length - 1]?.grade}/{item.points}{" "}
+                      Points
                     </Badge>
                   )}
                 </div>

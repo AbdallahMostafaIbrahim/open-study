@@ -14,6 +14,10 @@ export default async function AssignmentDetailsPage({
     sectionId,
     id: assignmentId,
   });
+  void api.professor.courses.assignments.submissions.prefetch({
+    sectionId,
+    id: assignmentId,
+  });
 
   return (
     <HydrateClient>

@@ -50,8 +50,9 @@ import {
   TooltipTrigger,
 } from "~/components/ui/tooltip";
 import { S3_URL } from "~/lib/constants";
-import { initials } from "~/lib/utils";
+import { formatDate, initials } from "~/lib/utils";
 import { api } from "~/trpc/react";
+import { Submissions } from "./submissions";
 
 export function AssignmentDetails({
   sectionId,
@@ -117,19 +118,6 @@ export function AssignmentDetails({
       id: assignmentId,
       sectionId,
     });
-  };
-
-  // Format date
-  const formatDate = (dateString: string | Date | null | undefined) => {
-    if (!dateString) return "—";
-    const date = new Date(dateString);
-    return new Intl.DateTimeFormat("en-US", {
-      month: "short",
-      day: "numeric",
-      year: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    }).format(date);
   };
 
   if (isLoading || !material) {
@@ -298,12 +286,6 @@ export function AssignmentDetails({
               <User className="mr-1 inline h-3.5 w-3.5" />
               {material.author.user.name}
             </span>
-            <span className="flex items-center">
-              <ClipboardList className="mr-1 inline h-3.5 w-3.5" />
-              {Array.isArray(material.submissions)
-                ? `${material.submissions.length} submission${material.submissions.length === 1 ? "" : "s"}`
-                : "—"}
-            </span>
           </div>
           <Button
             variant="outline"
@@ -317,6 +299,7 @@ export function AssignmentDetails({
           </Button>
         </CardFooter>
       </Card>
+      <Submissions assignmentId={assignmentId} sectionId={sectionId} />
     </div>
   );
 }

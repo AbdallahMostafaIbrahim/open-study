@@ -1,6 +1,7 @@
 import { AlertCircle, AlertTriangle, Calendar } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "~/components/ui/alert";
 import { Badge } from "~/components/ui/badge";
+import { formatDate } from "~/lib/utils";
 
 interface DueDateDisplayProps {
   dueDate: Date | null | undefined;
@@ -14,17 +15,6 @@ export function DueDateDisplay({
   isCloseToDeadline,
 }: DueDateDisplayProps) {
   if (!dueDate) return null;
-
-  // Format date helper
-  const formatDate = (date: Date) => {
-    return new Intl.DateTimeFormat("en-US", {
-      month: "short",
-      day: "numeric",
-      year: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    }).format(new Date(date));
-  };
 
   // Calculate time remaining until due date
   const getTimeRemaining = () => {

@@ -4,6 +4,7 @@ import { Award, Calendar, FolderOpen, Plus } from "lucide-react";
 import Link from "next/link";
 import { Button } from "~/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
+import { formatDate } from "~/lib/utils";
 import { api } from "~/trpc/react";
 
 export const Assignments = ({ sectionId }: { sectionId: number }) => {
@@ -12,16 +13,6 @@ export const Assignments = ({ sectionId }: { sectionId: number }) => {
     api.professor.courses.assignments.get.useSuspenseQuery({
       sectionId,
     });
-
-  // Function to format date in a more readable way
-  const formatDate = (dateString: string | Date) => {
-    const date = new Date(dateString);
-    return new Intl.DateTimeFormat("en-US", {
-      month: "short",
-      day: "numeric",
-      year: "numeric",
-    }).format(date);
-  };
 
   // Render the add material button
   const renderAddButton = () => (

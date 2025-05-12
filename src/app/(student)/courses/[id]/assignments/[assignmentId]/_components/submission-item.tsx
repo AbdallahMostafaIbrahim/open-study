@@ -2,6 +2,7 @@ import { Award, Clock, FileText, MessageSquare, Upload } from "lucide-react";
 import { Badge } from "~/components/ui/badge";
 import { Separator } from "~/components/ui/separator";
 import { S3_URL } from "~/lib/constants";
+import { formatDate } from "~/lib/utils";
 
 interface SubmissionItemProps {
   submission: any;
@@ -14,17 +15,6 @@ export function SubmissionItem({
   grade,
   dueDate,
 }: SubmissionItemProps) {
-  // Format date helper
-  const formatDate = (date: Date) => {
-    return new Intl.DateTimeFormat("en-US", {
-      month: "short",
-      day: "numeric",
-      year: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    }).format(new Date(date));
-  };
-
   const isLate = dueDate && new Date(submission.date) > new Date(dueDate);
 
   return (

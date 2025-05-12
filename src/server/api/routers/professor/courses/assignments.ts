@@ -51,7 +51,121 @@ export const assignmentsRouter = createTRPCRouter({
           dueDate: true,
           maxAttempts: true,
           points: true,
-          submissions: true,
+        },
+      });
+    }),
+  submissions: professorProcedure
+    .input(z.object({ id: z.string(), sectionId: z.number() }))
+    .query(async ({ ctx, input }) => {
+      const submissions = await ctx.db.assignmentSubmission.findMany({
+        where: {
+          assignmentId: input.id,
+          assignment: {
+            courseSection: {
+              id: input.sectionId,
+              professors: { some: { professorId: ctx.session.user.id } },
+            },
+          },
+        },
+        select: {
+          id: true,
+          date: true,
+          text: true,
+          files: true,
+          attempt: true,
+          student: {
+            select: {
+              user: { select: { id: true, name: true, image: true } },
+            },
+          },
+        },
+        orderBy: { attempt: "desc" },
+      });
+      const grades = await ctx.db.assignmentSubmissionGrade.findMany({
+        where: {
+          assignmentId: input.id,
+          assignment: {
+            courseSection: {
+              id: input.sectionId,
+              professors: { some: { professorId: ctx.session.user.id } },
+            },
+          },
+        },
+        select: {
+          studentId: true,
+          grade: true,
+          feedback: true,
+          isGradePosted: true,
+          attempt: true,
+        },
+      });
+      const submissionsWithGrades = submissions.map((submission) => {
+        const grade = grades.find(
+          (g) =>
+            g.studentId === submission.student.user.id &&
+            g.attempt === submission.attempt,
+        );
+        return {
+          ...submission,
+          grade: {
+            grade: grade?.grade,
+            feedback: grade?.feedback,
+            isGradePosted: grade?.isGradePosted,
+          },
+        };
+      });
+      return submissionsWithGrades;
+    }),
+  grade: professorProcedure
+    .input(
+      z.object({
+        assignmentId: z.string(),
+        sectionId: z.number(),
+        studentId: z.string(),
+        grade: z.number(),
+        attempt: z.number(),
+        feedback: z.string().optional(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      // Check if the assignment exists and belongs to the professor
+      const assignment = await ctx.db.assignment.findFirst({
+        where: {
+          id: input.assignmentId,
+          courseSection: {
+            id: input.sectionId,
+            professors: { some: { professorId: ctx.session.user.id } },
+          },
+        },
+      });
+      if (!assignment) {
+        throw new Error("Assignment not found or you do not have access.");
+      }
+
+      const exists = await ctx.db.assignmentSubmissionGrade.findFirst({
+        where: {
+          assignmentId: input.assignmentId,
+          studentId: input.studentId,
+          attempt: input.attempt,
+        },
+      });
+
+      return await ctx.db.assignmentSubmissionGrade.upsert({
+        where: {
+          id: exists?.id,
+        },
+        create: {
+          assignmentId: input.assignmentId,
+          studentId: input.studentId,
+          isGradePosted: true,
+          grade: input.grade,
+          feedback: input.feedback,
+          attempt: input.attempt,
+        },
+        update: {
+          grade: input.grade,
+          feedback: input.feedback,
+          attempt: input.attempt,
         },
       });
     }),

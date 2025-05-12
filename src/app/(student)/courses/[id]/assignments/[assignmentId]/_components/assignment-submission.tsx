@@ -82,7 +82,7 @@ export function AssignmentSubmission({
 
   // Default to history tab if submissions exist and no more attempts or if deadline passed
   const defaultTab =
-    submissions.length > 0 && (!canSubmit || isDueDatePassed)
+    submissions.length > 0 && (canSubmit || isDueDatePassed)
       ? "history"
       : "new";
 

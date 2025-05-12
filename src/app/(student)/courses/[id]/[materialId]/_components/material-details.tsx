@@ -48,7 +48,7 @@ import {
   TooltipTrigger,
 } from "~/components/ui/tooltip";
 import { S3_URL } from "~/lib/constants";
-import { initials } from "~/lib/utils";
+import { formatDate, initials } from "~/lib/utils";
 import { api } from "~/trpc/react";
 
 export function CourseMaterialDetails({
@@ -66,18 +66,6 @@ export function CourseMaterialDetails({
       sectionId,
       id: materialId,
     });
-
-  // Format date
-  const formatDate = (dateString: string | Date) => {
-    const date = new Date(dateString);
-    return new Intl.DateTimeFormat("en-US", {
-      month: "short",
-      day: "numeric",
-      year: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    }).format(date);
-  };
 
   if (isLoading) {
     return (
