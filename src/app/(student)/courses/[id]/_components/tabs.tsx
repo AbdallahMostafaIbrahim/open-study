@@ -16,7 +16,7 @@ const TabsLinkTrigger: React.FC<{
 export const CourseTabs = ({ id }: { id: number }) => {
   const path = usePathname();
   // make the path just the first 4 segments of the pathname
-  const pathSegments = path.split("/").slice(0, 5);
+  const pathSegments = path.split("/").slice(0, 4);
   const fixedPath = pathSegments.join("/");
 
   return (

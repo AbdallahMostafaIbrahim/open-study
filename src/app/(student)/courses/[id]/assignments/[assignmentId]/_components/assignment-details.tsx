@@ -69,9 +69,16 @@ export function AssignmentDetails({
     <div className="space-y-6">
       {/* Header with navigation and actions */}
       <div className="flex flex-col space-y-4 sm:flex-row sm:items-center sm:justify-between sm:space-y-0">
-        <div className="flex items-center space-x-2">
-          <h1 className="text-2xl font-bold">{assignment.title}</h1>
-        </div>
+        <h1 className="text-2xl font-bold">{assignment.title}</h1>
+        {assignment.grades && assignment.grades.length > 0 && (
+          <div className="flex items-center gap-2 border-l pl-4">
+            <h3 className="text-muted-foreground">Grade</h3>
+            <span className="font-semibold">
+              {assignment.grades[assignment.grades.length - 1]?.grade} /{" "}
+              {assignment.points}
+            </span>
+          </div>
+        )}
       </div>
 
       {/* Assignment content */}
@@ -115,21 +122,6 @@ export function AssignmentDetails({
         </CardHeader>
 
         <CardContent className="space-y-6">
-          {assignment.grades && assignment.grades.length > 0 && (
-            <div className="flex items-center gap-2">
-              <h3 className="text-lg font-semibold">Grade</h3>
-              <span className="text-muted-foreground text-sm">
-                {assignment.grades[assignment.grades.length - 1]?.grade ??
-                  "Not graded yet"}
-              </span>
-              {assignment.grades[assignment.grades.length - 1]?.feedback && (
-                <span className="ml-2 text-xs text-gray-500 italic">
-                  {assignment.grades[assignment.grades.length - 1]?.feedback}
-                </span>
-              )}
-            </div>
-          )}
-
           {/* Text content */}
           {assignment.text && (
             <div className="prose prose-neutral dark:prose-invert max-w-none">

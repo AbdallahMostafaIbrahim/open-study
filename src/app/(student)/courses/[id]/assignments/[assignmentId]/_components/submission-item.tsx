@@ -1,4 +1,5 @@
 import { Award, Clock, FileText, MessageSquare, Upload } from "lucide-react";
+import { FileList } from "~/components/files";
 import { Badge } from "~/components/ui/badge";
 import { Separator } from "~/components/ui/separator";
 import { S3_URL } from "~/lib/constants";
@@ -56,6 +57,7 @@ export function SubmissionItem({
               <FileText className="text-muted-foreground mr-2 h-4 w-4" />
               Your Answer
             </h4>
+            <div className="h-2"></div>
             <div className="bg-muted rounded-md p-3 text-sm whitespace-pre-wrap">
               {submission.text}
             </div>
@@ -68,25 +70,7 @@ export function SubmissionItem({
             <h4 className="text-sm font-medium">
               Files ({submission.files.length})
             </h4>
-            <div className="grid gap-2 md:grid-cols-2">
-              {submission.files.map((file: any) => (
-                <a
-                  key={file.id}
-                  href={`${S3_URL}${file.link}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="hover:bg-accent flex items-center justify-between rounded-md border p-2"
-                >
-                  <div className="flex items-center">
-                    <Upload className="mr-2 h-4 w-4 text-blue-500" />
-                    <span className="text-sm">{file.name || "File"}</span>
-                  </div>
-                  <Badge variant="outline" className="text-xs">
-                    {file.type || "Document"}
-                  </Badge>
-                </a>
-              ))}
-            </div>
+            <FileList files={submission.files} />
           </div>
         )}
 
