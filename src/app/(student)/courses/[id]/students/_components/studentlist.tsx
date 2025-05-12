@@ -7,18 +7,13 @@ import { useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { Button } from "~/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
+import { initials } from "~/lib/utils";
 import { api } from "~/trpc/react";
 
 export const StudentList = ({ sectionId }: { sectionId: number }) => {
   const [section, { isLoading, error, refetch }] =
     api.student.courses.getOne.useSuspenseQuery(sectionId);
-  const getInitials = (name: string = "User") => {
-    return name
-      .split(" ")
-      .map((part) => part.charAt(0).toUpperCase())
-      .slice(0, 2)
-      .join("");
-  };
+
   if (isLoading) {
     return <div className="flex justify-center py-8">Loading Students...</div>;
   }
@@ -43,7 +38,7 @@ export const StudentList = ({ sectionId }: { sectionId: number }) => {
                       alt={student.student.user.name || ""}
                     />
                     <AvatarFallback>
-                      {getInitials(student.student.user.name || "")}
+                      {initials(student.student.user.name || "")}
                     </AvatarFallback>
                   </Avatar>
                   <p className="font-medium">{student.student.user.name}</p>

@@ -1,5 +1,5 @@
-import { api, HydrateClient } from "~/trpc/server";
 import { Suspense } from "react";
+import { api, HydrateClient } from "~/trpc/server";
 import { CourseMaterial } from "./_components/material";
 import { CourseMaterialSkeleton } from "./_components/skeleton";
 

@@ -20,3 +20,15 @@ export function roles(user: Session["user"]) {
   if (user.student) r.push("student");
   return r;
 }
+
+export const formatDate = (dateString: string | Date | null | undefined) => {
+  if (!dateString) return "—";
+  const date = new Date(dateString);
+  return new Intl.DateTimeFormat("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  }).format(date);
+};

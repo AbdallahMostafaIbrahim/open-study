@@ -10,6 +10,9 @@ export async function POST(req: Request) {
   const result = streamText({
     model: openai("gpt-4o"),
     messages,
+    onError: (error) => {
+      console.error("Error:", error);
+    },
     tools: {
       weather: tool({
         description: "Get the weather in a location (fahrenheit)",

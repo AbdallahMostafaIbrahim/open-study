@@ -70,14 +70,15 @@ model User {
 }
 
 model Student {
-    userId         String                 @id @unique
-    user           User                   @relation(fields: [userId], references: [id], onDelete: Cascade)
-    studentId      String?
-    organizationId Int
-    organization   Organization           @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-    submissions    AssignmentSubmission[]
-    courses        CourseStudent[]
-    QuizSubmission QuizSubmission[]
+    userId           String                      @id @unique
+    user             User                        @relation(fields: [userId], references: [id], onDelete: Cascade)
+    studentId        String?
+    organizationId   Int
+    organization     Organization                @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+    submissions      AssignmentSubmission[]
+    courses          CourseStudent[]
+    quizSubmission   QuizSubmission[]
+    assignmentGrades AssignmentSubmissionGrade[]
 }
 
 model Professor {
@@ -195,6 +196,16 @@ model MaterialFile {
     materialId String?
 }
 
+model AssignmentFile {
+    id   String  @id @default(cuid())
+    name String?
+    type String?
+    link String
+
+    assignment   Assignment? @relation(fields: [assignmentId], references: [id])
+    assignmentId String?
+}
+
 model Assignment {
     id          String    @id @default(cuid())
     title       String
@@ -202,7 +213,6 @@ model Assignment {
     dueDate     DateTime?
     publishAt   DateTime?
     isPublished Boolean   @default(false)
-    group       String?
 
     courseSectionId Int
     courseSection   CourseSection @relation(fields: [courseSectionId], references: [id], onDelete: Cascade)
@@ -210,22 +220,43 @@ model Assignment {
     authorId String
     author   Professor @relation(fields: [authorId], references: [userId], onDelete: Cascade)
 
-    file     String?
-    fileType String?
-    text     String?
+    text String?
 
     maxAttempts Int?
     points      Int
 
     submissions AssignmentSubmission[]
+    files       AssignmentFile[]
+    grades      AssignmentSubmissionGrade[]
+}
+
+model AssignmentSubmissionFile {
+    id   String  @id @default(cuid())
+    name String?
+    type String?
+    link String
+
+    assignmentSubmission   AssignmentSubmission? @relation(fields: [assignmentSubmissionId], references: [id])
+    assignmentSubmissionId String?
 }
 
 model AssignmentSubmission {
+    id      String   @id @default(cuid())
+    date    DateTime @default(now())
+    text    String?
+    attempt Int      @default(0)
+
+    assignmentId String
+    assignment   Assignment @relation(fields: [assignmentId], references: [id], onDelete: Cascade)
+
+    studentId String
+    student   Student                    @relation(fields: [studentId], references: [userId], onDelete: Cascade)
+    files     AssignmentSubmissionFile[]
+}
+
+model AssignmentSubmissionGrade {
     id            String   @id @default(cuid())
     date          DateTime @default(now())
-    file          String?
-    fileType      String?
-    text          String?
     grade         Int?
     feedback      String?
     isGradePosted Boolean  @default(false)

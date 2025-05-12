@@ -1,9 +1,9 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
-import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { X, Check, ChevronsUpDown, User } from "lucide-react";
+import { Check, ChevronsUpDown, User, X } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { useForm } from "react-hook-form";
 import {
   Command,
   CommandEmpty,
@@ -17,6 +17,10 @@ import {
   PopoverTrigger,
 } from "~/components/ui/popover";
 
+import { useRouter } from "next/navigation";
+import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
+import { Badge } from "~/components/ui/badge";
+import { Button } from "~/components/ui/button";
 import {
   Form,
   FormControl,
@@ -26,8 +30,7 @@ import {
   FormMessage,
 } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
-import { Button } from "~/components/ui/button";
-import { Badge } from "~/components/ui/badge";
+import { ScrollArea } from "~/components/ui/scroll-area";
 import {
   Select,
   SelectContent,
@@ -35,25 +38,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
-import { ScrollArea } from "~/components/ui/scroll-area";
-import { Avatar, AvatarImage, AvatarFallback } from "~/components/ui/avatar";
-import { cn } from "~/lib/utils";
+import { cn, initials } from "~/lib/utils";
+import { api } from "~/trpc/react";
 import {
   sectionSchema,
   type SectionFormValues,
   type SelectedPerson,
 } from "./schema";
-import { api } from "~/trpc/react";
-import { useRouter } from "next/navigation";
-
-// Helper function to get initials from name
-function getInitials(name: string): string {
-  return name
-    .split(" ")
-    .map((part) => part.charAt(0).toUpperCase())
-    .slice(0, 2)
-    .join("");
-}
 
 interface SectionFormProps {
   organizationId: number;
@@ -265,7 +256,7 @@ export const SectionForm = ({ onSubmit, organizationId }: SectionFormProps) => {
                           alt={professor.user.name || professor.user.email}
                         />
                         <AvatarFallback className="text-foreground/70">
-                          {getInitials(
+                          {initials(
                             professor.user.name || professor.user.email,
                           )}
                         </AvatarFallback>
@@ -301,7 +292,7 @@ export const SectionForm = ({ onSubmit, organizationId }: SectionFormProps) => {
                     <Avatar className="h-8 w-8">
                       <AvatarImage src={prof.imageUrl} alt={prof.name} />
                       <AvatarFallback className="text-foreground/70">
-                        {getInitials(prof.name)}
+                        {initials(prof.name)}
                       </AvatarFallback>
                     </Avatar>
                     <span className="text-sm">{prof.name}</span>
@@ -361,7 +352,7 @@ export const SectionForm = ({ onSubmit, organizationId }: SectionFormProps) => {
                           alt={student.user.name || student.user.email}
                         />
                         <AvatarFallback className="text-foreground/70">
-                          {getInitials(student.user.name || student.user.email)}
+                          {initials(student.user.name || student.user.email)}
                         </AvatarFallback>
                       </Avatar>
                       <span className="flex-1">
@@ -392,7 +383,7 @@ export const SectionForm = ({ onSubmit, organizationId }: SectionFormProps) => {
                     <Avatar className="h-8 w-8">
                       <AvatarImage src={student.imageUrl} alt={student.name} />
                       <AvatarFallback className="text-foreground/70">
-                        {getInitials(student.name)}
+                        {initials(student.name)}
                       </AvatarFallback>
                     </Avatar>
                     <span className="text-sm">{student.name}</span>

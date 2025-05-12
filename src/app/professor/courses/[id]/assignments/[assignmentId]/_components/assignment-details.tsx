@@ -1,8 +1,11 @@
 "use client";
 
 import {
+  AlarmClock,
   ArrowLeft,
+  Award,
   Calendar,
+  ClipboardList,
   Clock,
   Download,
   Edit,
@@ -35,7 +38,6 @@ import { Button } from "~/components/ui/button";
 import {
   Card,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
@@ -51,48 +53,50 @@ import { S3_URL } from "~/lib/constants";
 import { initials } from "~/lib/utils";
 import { api } from "~/trpc/react";
 
-export function CourseMaterialDetails({
+export function AssignmentDetails({
   sectionId,
-  materialId,
+  assignmentId,
 }: {
   sectionId: number;
-  materialId: string;
+  assignmentId: string;
 }) {
   const router = useRouter();
   const [publishing, setPublishing] = useState(false);
   const [deleting, setDeleting] = useState(false);
 
-  // Fetch material details
+  // Fetch assignment details
   const [material, { isLoading, error, refetch }] =
-    api.professor.courses.material.getOne.useSuspenseQuery({
+    api.professor.courses.assignments.getOne.useSuspenseQuery({
       sectionId,
-      id: materialId,
+      id: assignmentId,
     });
 
   // Mutations for publish/unpublish and delete
-  const publishMutation = api.professor.courses.material.publish.useMutation({
-    onSuccess: () => {
-      refetch();
-      toast.success(
-        material?.isPublished
-          ? "Material unpublished successfully"
-          : "Material published successfully",
-      );
-      setPublishing(false);
+  const publishMutation = api.professor.courses.assignments.publish.useMutation(
+    {
+      onSuccess: () => {
+        refetch();
+        toast.success(
+          material?.isPublished
+            ? "Assignment unpublished successfully"
+            : "Assignment published successfully",
+        );
+        setPublishing(false);
+      },
+      onError: (error) => {
+        toast.error(`Failed to update assignment: ${error.message}`);
+        setPublishing(false);
+      },
     },
-    onError: (error) => {
-      toast.error(`Failed to update material: ${error.message}`);
-      setPublishing(false);
-    },
-  });
+  );
 
-  const deleteMutation = api.professor.courses.material.delete.useMutation({
+  const deleteMutation = api.professor.courses.assignments.delete.useMutation({
     onSuccess: () => {
-      toast.success("Material deleted successfully");
-      router.push(`/professor/courses/${sectionId}/content`);
+      toast.success("Assignment deleted successfully");
+      router.push(`/professor/courses/${sectionId}/assignments`);
     },
     onError: (error) => {
-      toast.error(`Failed to delete material: ${error.message}`);
+      toast.error(`Failed to delete assignment: ${error.message}`);
       setDeleting(false);
     },
   });
@@ -101,7 +105,7 @@ export function CourseMaterialDetails({
   const handlePublishToggle = () => {
     setPublishing(true);
     publishMutation.mutate({
-      id: materialId,
+      id: assignmentId,
       sectionId,
       published: !material?.isPublished,
     });
@@ -110,13 +114,14 @@ export function CourseMaterialDetails({
   const handleDelete = () => {
     setDeleting(true);
     deleteMutation.mutate({
-      id: materialId,
+      id: assignmentId,
       sectionId,
     });
   };
 
   // Format date
-  const formatDate = (dateString: string | Date) => {
+  const formatDate = (dateString: string | Date | null | undefined) => {
+    if (!dateString) return "—";
     const date = new Date(dateString);
     return new Intl.DateTimeFormat("en-US", {
       month: "short",
@@ -130,7 +135,7 @@ export function CourseMaterialDetails({
   if (isLoading || !material) {
     return (
       <div className="flex justify-center py-8">
-        Loading material details...
+        Loading assignment details...
       </div>
     );
   }
@@ -138,7 +143,7 @@ export function CourseMaterialDetails({
   if (error) {
     return (
       <div className="rounded-lg bg-red-50 p-4 text-red-800">
-        <h3 className="text-lg font-medium">Error loading material</h3>
+        <h3 className="text-lg font-medium">Error loading assignment</h3>
         <p>{error.message}</p>
       </div>
     );
@@ -149,12 +154,7 @@ export function CourseMaterialDetails({
       {/* Header with navigation and actions */}
       <div className="flex flex-col space-y-4 sm:flex-row sm:items-center sm:justify-between sm:space-y-0">
         <div className="flex items-center space-x-2">
-          <h1 className="text-2xl font-bold">{material.title}</h1>{" "}
-          {material.group && (
-            <Badge variant="outline" className="bg-muted/40">
-              {material.group}
-            </Badge>
-          )}
+          <h1 className="text-2xl font-bold">{material.title}</h1>
         </div>
 
         <div className="flex items-center space-x-2">
@@ -177,7 +177,7 @@ export function CourseMaterialDetails({
 
           <Button variant="outline" size="sm" asChild>
             <Link
-              href={`/professor/courses/${sectionId}/content/${materialId}/edit`}
+              href={`/professor/courses/${sectionId}/assignments/${assignmentId}/edit`}
             >
               <Edit className="mr-1 h-4 w-4" />
               Edit
@@ -193,9 +193,9 @@ export function CourseMaterialDetails({
             </AlertDialogTrigger>
             <AlertDialogContent>
               <AlertDialogHeader>
-                <AlertDialogTitle>Delete material</AlertDialogTitle>
+                <AlertDialogTitle>Delete assignment</AlertDialogTitle>
                 <AlertDialogDescription>
-                  Are you sure you want to delete this material? This action
+                  Are you sure you want to delete this assignment? This action
                   cannot be undone.
                 </AlertDialogDescription>
               </AlertDialogHeader>
@@ -218,10 +218,10 @@ export function CourseMaterialDetails({
         </div>
       </div>
 
-      {/* Material content */}
+      {/* Assignment content */}
       <Card>
         <CardHeader>
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
             <div className="flex items-center space-x-2">
               <Avatar className="h-10 w-10">
                 <AvatarImage
@@ -242,16 +242,28 @@ export function CourseMaterialDetails({
                 </div>
               </div>
             </div>
-            <Badge
-              variant={material.isPublished ? "default" : "outline"}
-              className={
-                material.isPublished
-                  ? "bg-green-500 hover:bg-green-500"
-                  : "border-amber-500 text-amber-500"
-              }
-            >
-              {material.isPublished ? "Published" : "Draft"}
-            </Badge>
+            <div className="mt-2 flex flex-wrap items-center gap-3 md:mt-0">
+              <div className="text-muted-foreground flex items-center text-xs">
+                <AlarmClock className="mr-1 h-4 w-4" />
+                <span>
+                  Due: {material.dueDate ? formatDate(material.dueDate) : "—"}
+                </span>
+              </div>
+              <div className="text-muted-foreground flex items-center text-xs">
+                <Award className="mr-1 h-4 w-4" />
+                <span>{material.points ?? "—"} pts</span>
+              </div>
+              <Badge
+                variant={material.isPublished ? "default" : "outline"}
+                className={
+                  material.isPublished
+                    ? "bg-green-500 hover:bg-green-500"
+                    : "border-amber-500 text-amber-500"
+                }
+              >
+                {material.isPublished ? "Published" : "Draft"}
+              </Badge>
+            </div>
           </div>
         </CardHeader>
 
@@ -271,14 +283,14 @@ export function CourseMaterialDetails({
           {!material.text &&
             (!material.files || material.files.length === 0) && (
               <div className="text-muted-foreground py-8 text-center">
-                <p>This material has no content or files.</p>
+                <p>This assignment has no content or files.</p>
               </div>
             )}
         </CardContent>
 
-        <CardFooter className="flex justify-between border-t pt-4">
-          <div className="text-muted-foreground flex text-xs">
-            <span className="mr-4 flex items-center">
+        <CardFooter className="flex flex-col gap-2 border-t pt-4 md:flex-row md:justify-between">
+          <div className="text-muted-foreground flex flex-wrap gap-4 text-xs">
+            <span className="flex items-center">
               <Clock className="mr-1 inline h-3.5 w-3.5" />
               {formatDate(material.date)}
             </span>
@@ -286,16 +298,22 @@ export function CourseMaterialDetails({
               <User className="mr-1 inline h-3.5 w-3.5" />
               {material.author.user.name}
             </span>
+            <span className="flex items-center">
+              <ClipboardList className="mr-1 inline h-3.5 w-3.5" />
+              {Array.isArray(material.submissions)
+                ? `${material.submissions.length} submission${material.submissions.length === 1 ? "" : "s"}`
+                : "—"}
+            </span>
           </div>
           <Button
             variant="outline"
             size="sm"
             onClick={() =>
-              router.push(`/professor/courses/${sectionId}/content`)
+              router.push(`/professor/courses/${sectionId}/assignments`)
             }
           >
             <ArrowLeft className="mr-1 h-4 w-4" />
-            Back to materials
+            Back to assignments
           </Button>
         </CardFooter>
       </Card>

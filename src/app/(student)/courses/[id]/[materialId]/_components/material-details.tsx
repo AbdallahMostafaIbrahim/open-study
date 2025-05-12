@@ -17,6 +17,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
+import { FileList } from "~/components/files";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -47,6 +48,7 @@ import {
   TooltipTrigger,
 } from "~/components/ui/tooltip";
 import { S3_URL } from "~/lib/constants";
+import { initials } from "~/lib/utils";
 import { api } from "~/trpc/react";
 
 export function CourseMaterialDetails({
@@ -77,19 +79,18 @@ export function CourseMaterialDetails({
     }).format(date);
   };
 
-  // Get user initials for avatar
-  const getInitials = (name: string = "User") => {
-    return name
-      .split(" ")
-      .map((part) => part.charAt(0).toUpperCase())
-      .slice(0, 2)
-      .join("");
-  };
-
-  if (isLoading || !material) {
+  if (isLoading) {
     return (
       <div className="flex justify-center py-8">
         Loading material details...
+      </div>
+    );
+  }
+
+  if (!material) {
+    return (
+      <div className="flex justify-center py-8">
+        <p>Material not found</p>
       </div>
     );
   }
@@ -135,7 +136,7 @@ export function CourseMaterialDetails({
                   alt={material.author.user.name || ""}
                 />
                 <AvatarFallback>
-                  {getInitials(material.author.user.name || "")}
+                  {initials(material.author.user.name || "")}
                 </AvatarFallback>
               </Avatar>
               <div>
@@ -162,58 +163,7 @@ export function CourseMaterialDetails({
           )}
 
           {/* Files section */}
-          {material.files && material.files.length > 0 && (
-            <div className="pt-4">
-              <h3 className="mb-3 text-lg font-semibold">Files</h3>
-              <Separator className="mb-4" />
-              <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-                {material.files.map((file) => (
-                  <div
-                    key={file.id}
-                    className="flex flex-col rounded-lg border p-4 transition-shadow hover:shadow-md"
-                  >
-                    <div className="flex items-start justify-between">
-                      <div className="flex items-center space-x-3">
-                        <File className="h-10 w-10 text-blue-500" />
-                        <div>
-                          <p className="max-w-[180px] truncate font-medium">
-                            {file.name || "Unnamed File"}
-                          </p>
-                          <p className="text-muted-foreground text-xs">
-                            {file.type || "Unknown type"}
-                          </p>
-                        </div>
-                      </div>
-                      <TooltipProvider>
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <Button
-                              size="icon"
-                              variant="ghost"
-                              className="h-8 w-8"
-                              asChild
-                            >
-                              <a
-                                href={`${S3_URL}${file.link}`}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                download
-                              >
-                                <Download className="h-4 w-4" />
-                              </a>
-                            </Button>
-                          </TooltipTrigger>
-                          <TooltipContent>
-                            <p>Download file</p>
-                          </TooltipContent>
-                        </Tooltip>
-                      </TooltipProvider>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
+          <FileList files={material.files} />
 
           {!material.text &&
             (!material.files || material.files.length === 0) && (
