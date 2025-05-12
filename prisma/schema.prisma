@@ -157,10 +157,10 @@ model CourseProfessor {
 }
 
 model Annoucement {
-    id          String   @id @default(cuid())
-    title       String
-    description String?
-    date        DateTime @default(now())
+    id      String   @id @default(cuid())
+    title   String
+    content String
+    date    DateTime @default(now())
 
     courseSectionId Int
     courseSection   CourseSection @relation(fields: [courseSectionId], references: [id], onDelete: Cascade)

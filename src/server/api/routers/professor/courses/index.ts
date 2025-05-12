@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { createTRPCRouter, professorProcedure } from "~/server/api/trpc";
+import { announcementsRouter } from "./announcements";
 import { assignmentsRouter } from "./assignments";
 import { materialRouter } from "./material";
 
@@ -62,4 +63,5 @@ export const coursesRouter = createTRPCRouter({
   }),
   material: materialRouter,
   assignments: assignmentsRouter,
+  announcements: announcementsRouter,
 });
