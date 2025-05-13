@@ -1,12 +1,9 @@
 import { redirect } from "next/navigation";
 
-import { CourseTabs } from "./_components/tabs";
-
-import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { Separator } from "~/components/ui/separator";
-import { initials } from "~/lib/utils";
 
 import { api } from "~/trpc/server";
+import { CourseTabs } from "./_components/tabs";
 
 export default async function CourseLayout({
   params,

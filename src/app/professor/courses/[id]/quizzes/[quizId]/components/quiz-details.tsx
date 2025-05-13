@@ -310,7 +310,7 @@ export function QuizDetails({
         </CardHeader>
         <CardContent className="space-y-6">
           {quiz.questions.map((question, index) => (
-            <Card key={question.id} className="border-muted/40">
+            <Card key={question.id} className="border-muted">
               <CardHeader className="py-3">
                 <div className="flex items-start justify-between">
                   <div className="space-y-1">
