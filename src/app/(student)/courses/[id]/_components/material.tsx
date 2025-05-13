@@ -101,11 +101,10 @@ export const CourseMaterial = ({ sectionId }: { sectionId: number }) => {
                 </div>
                 <div>
                   <span
-                    className={`inline-flex items-center rounded-full px-2 py-1 text-xs ${
-                      author.isActive
+                    className={`inline-flex items-center rounded-full px-2 py-1 text-xs ${author.isActive
                         ? "bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-200"
                         : "bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300"
-                    }`}
+                      }`}
                   >
                     {author.type === "PROFESSOR" ? "Professor" : "TA"}
                   </span>
@@ -143,7 +142,7 @@ export const CourseMaterial = ({ sectionId }: { sectionId: number }) => {
                   {items.map((item) => (
                     <Link
                       key={item.id}
-                      href={`/courses/${sectionId}/${item.id}`}
+                      href={`/courses/${sectionId}/material/${item.id}`}
                     >
                       <Card className="hover:border-primary relative cursor-pointer transition-all duration-200 hover:shadow-md">
                         <CardHeader className="pb-2">

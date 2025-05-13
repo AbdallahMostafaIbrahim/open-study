@@ -62,7 +62,7 @@ export default function CreateCourseMaterial() {
   // Create material mutation
   const createMaterial = api.professor.courses.assignments.create.useMutation({
     onSuccess: () => {
-      router.push(`/professor/courses/${sectionId}/content`);
+      router.push(`/professor/courses/${sectionId}/assignments`);
       router.refresh();
     },
   });
