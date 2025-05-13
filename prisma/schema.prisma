@@ -77,7 +77,7 @@ model Student {
     organization     Organization                @relation(fields: [organizationId], references: [id], onDelete: Cascade)
     submissions      AssignmentSubmission[]
     courses          CourseStudent[]
-    quizSubmission   QuizSubmission[]
+    quizSubmissions  QuizSubmission[]
     assignmentGrades AssignmentSubmissionGrade[]
 }
 
@@ -121,7 +121,7 @@ model CourseSection {
     assignments   Assignment[]
     students      CourseStudent[]
     professors    CourseProfessor[]
-    quizes        Quiz[]
+    quizzes       Quiz[]
     semester      Semester          @relation(fields: [semesterId], references: [id])
     semesterId    Int
 }
@@ -274,18 +274,18 @@ model Quiz {
     title       String
     description String?
 
-    dueDate     DateTime?
-    publishAt   DateTime?
-    isPublished Boolean   @default(false)
-    group       String?
+    dueDate           DateTime?
+    durationInSeconds Int?
+    publishAt         DateTime?
+    isPublished       Boolean   @default(false)
 
     courseSectionId Int
     courseSection   CourseSection @relation(fields: [courseSectionId], references: [id], onDelete: Cascade)
 
-    maxAttempts    Int?
-    points         Int
-    QuizQuestion   QuizQuestion[]
-    QuizSubmission QuizSubmission[]
+    maxAttempts Int?
+    points      Int
+    questions   QuizQuestion[]
+    submissions QuizSubmission[]
 }
 
 enum QuestionType {
@@ -295,43 +295,51 @@ enum QuestionType {
 }
 
 model QuizQuestion {
-    id       String       @id @default(cuid())
-    question String
-    type     QuestionType
-    points   Int
-    order    Int
-
-    quizId String
-    quiz   Quiz   @relation(fields: [quizId], references: [id], onDelete: Cascade)
+    id            String       @id @default(cuid())
+    question      String
+    type          QuestionType
+    points        Int
+    order         Int
+    options       String[]     @default([])
+    correctAnswer String[]     @default([])
+    quizId        String
+    quiz          Quiz         @relation(fields: [quizId], references: [id], onDelete: Cascade)
 
     answers QuizAnswer[]
 }
 
 model QuizAnswer {
-    id     String @id @default(cuid())
-    answer String
-    grade  Int?
+    id     String   @id @default(cuid())
+    answer String[] @default([])
+    grade  Float?
+    isTouched Boolean @default(false)
+    index  Int
 
     quizQuestionId String
     quizQuestion   QuizQuestion @relation(fields: [quizQuestionId], references: [id], onDelete: Cascade)
+
+    submission       QuizSubmission @relation(fields: [quizSubmissionId], references: [id])
+    quizSubmissionId String
 }
 
 model QuizSubmission {
     id            String    @id @default(cuid())
     date          DateTime  @default(now())
-    grade         Int?
+    grade         Float?
     feedback      String?
     isGradePosted Boolean   @default(false)
     attempt       Int       @default(0)
-    startedAt     DateTime?
+    startedAt     DateTime? @default(now())
     finishedAt    DateTime?
 
     quizId String
     quiz   Quiz   @relation(fields: [quizId], references: [id], onDelete: Cascade)
 
     studentId String
-    student   Student @relation(fields: [studentId], references: [userId], onDelete: Cascade)
+    student   Student      @relation(fields: [studentId], references: [userId], onDelete: Cascade)
+    answers   QuizAnswer[]
 }
+
 
 model Semester {
     id             Int             @id @default(autoincrement())

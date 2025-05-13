@@ -3,6 +3,7 @@ import { createTRPCRouter, professorProcedure } from "~/server/api/trpc";
 import { announcementsRouter } from "./announcements";
 import { assignmentsRouter } from "./assignments";
 import { materialRouter } from "./material";
+import { quizzesRouter } from "./quizzes";
 
 export const coursesRouter = createTRPCRouter({
   get: professorProcedure.query(async ({ ctx, input }) => {
@@ -55,7 +56,7 @@ export const coursesRouter = createTRPCRouter({
             students: true,
             materials: true,
             assignments: true,
-            quizes: true,
+            quizzes: true,
           },
         },
       },
@@ -64,4 +65,5 @@ export const coursesRouter = createTRPCRouter({
   material: materialRouter,
   assignments: assignmentsRouter,
   announcements: announcementsRouter,
+  quizzes: quizzesRouter,
 });

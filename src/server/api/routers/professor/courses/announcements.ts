@@ -21,6 +21,9 @@ export const announcementsRouter = createTRPCRouter({
           },
           date: true,
         },
+        orderBy: {
+          date: "desc",
+        },
       });
     }),
   create: professorProcedure

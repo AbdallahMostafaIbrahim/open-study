@@ -152,7 +152,7 @@ export const assignmentsRouter = createTRPCRouter({
 
       return await ctx.db.assignmentSubmissionGrade.upsert({
         where: {
-          id: exists?.id,
+          id: exists?.id || "",
         },
         create: {
           assignmentId: input.assignmentId,

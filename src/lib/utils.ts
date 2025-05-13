@@ -32,3 +32,18 @@ export const formatDate = (dateString: string | Date | null | undefined) => {
     minute: "2-digit",
   }).format(date);
 };
+
+export const formatDuration = (seconds: number | null | undefined) => {
+  if (!seconds) return "No time limit";
+
+  const hours = Math.floor(seconds / 3600);
+  const minutes = Math.floor((seconds % 3600) / 60);
+  const remainingSeconds = seconds % 60;
+
+  let result = [];
+  if (hours > 0) result.push(`${hours}h`);
+  if (minutes > 0) result.push(`${minutes}m`);
+  if (remainingSeconds > 0 && hours === 0) result.push(`${remainingSeconds}s`);
+
+  return result.join(" ");
+};
