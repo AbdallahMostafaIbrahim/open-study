@@ -100,12 +100,14 @@ export const Quizzes = ({ sectionId }: { sectionId: number }) => {
                         {quiz._count.questions !== 1 ? "s" : ""}
                       </span>
                     </div>
-                    {quiz.durationInSeconds && (
-                      <div className="flex items-center text-sm">
-                        <Clock className="text-muted-foreground mr-1.5 h-4 w-4" />
-                        <span>{formatDuration(quiz.durationInSeconds)}</span>
-                      </div>
-                    )}
+                    <div className="flex items-center text-sm">
+                      <Clock className="text-muted-foreground mr-1.5 h-4 w-4" />
+                      <span>
+                        {quiz.durationInSeconds
+                          ? formatDuration(quiz.durationInSeconds)
+                          : "No Limit"}
+                      </span>
+                    </div>
                     {quiz._count.submissions > 0 && (
                       <div className="text-muted-foreground flex items-center text-sm">
                         {quiz._count.submissions} submission

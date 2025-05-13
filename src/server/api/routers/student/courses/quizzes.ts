@@ -46,6 +46,7 @@ export const quizzesRouter = createTRPCRouter({
           description: true,
           dueDate: true,
           maxAttempts: true,
+          durationInSeconds: true,
           points: true,
           isPublished: true,
           questions: {
@@ -58,6 +59,15 @@ export const quizzesRouter = createTRPCRouter({
             },
             orderBy: { order: "asc" },
           },
+          submissions: {
+            select: {
+              id: true,
+              finishedAt: true,
+              grade: true,
+            },
+            where: { studentId: ctx.session.user.id },
+          },
+          _count: { select: { questions: true } },
         },
       });
     }),
