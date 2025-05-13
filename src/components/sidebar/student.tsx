@@ -34,11 +34,13 @@ const items = [
     title: "Calendar",
     url: "/calendar",
     icon: Calendar,
+    disabled: true,
   },
   {
     title: "Settings",
     url: "/settings",
     icon: Settings,
+    disabled: true,
   },
 ];
 
@@ -56,11 +58,21 @@ export async function StudentSidebar() {
             <SidebarMenu>
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild>
-                    <Link href={item.url}>
-                      <item.icon />
-                      <span>{item.title}</span>
-                    </Link>
+                  <SidebarMenuButton
+                    className={item.disabled ? "opacity-70" : ""}
+                    asChild
+                  >
+                    {item.disabled ? (
+                      <div>
+                        <item.icon />
+                        <span>{item.title}</span>
+                      </div>
+                    ) : (
+                      <Link href={item.url}>
+                        <item.icon />
+                        <span>{item.title}</span>
+                      </Link>
+                    )}
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}

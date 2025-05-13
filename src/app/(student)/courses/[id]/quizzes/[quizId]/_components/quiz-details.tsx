@@ -10,6 +10,7 @@ import {
   Eye,
   EyeOff,
   File,
+  GitBranch,
   HelpCircle,
   Loader2,
   Trash2,
@@ -52,6 +53,7 @@ import {
 import { S3_URL } from "~/lib/constants";
 import { formatDate, formatDuration, initials } from "~/lib/utils";
 import { api } from "~/trpc/react";
+import { BestQuizSubmission } from "./best-quiz-submission";
 
 export function QuizDetails({
   sectionId,
@@ -67,6 +69,18 @@ export function QuizDetails({
     api.student.courses.quizzes.getOne.useSuspenseQuery({
       sectionId,
       id: quizId,
+    });
+
+  const { mutate, isPending: isStarting } =
+    api.student.courses.quizzes.start.useMutation({
+      onSuccess(data) {
+        if (data) {
+          router.push(`/courses/${sectionId}/quizzes/${quizId}/session`);
+        }
+      },
+      onError(error) {
+        toast.error(error.message);
+      },
     });
 
   if (isLoading) {
@@ -91,6 +105,28 @@ export function QuizDetails({
       </div>
     );
   }
+  let canStartQuiz = true;
+
+  if (quiz.dueDate) {
+    const dueDate = new Date(quiz.dueDate);
+    const now = new Date();
+    canStartQuiz = dueDate > now;
+  }
+  if (quiz.maxAttempts) {
+    canStartQuiz = canStartQuiz && quiz.maxAttempts > quiz.submissions.length;
+  }
+
+  // Check if the last submission doesn't have a finishedAt date
+  const canResume = quiz.submissions.some(
+    (submission) => !submission.finishedAt,
+  );
+  const canRetry = quiz.submissions.length > 0;
+
+  // Let's get the best submission (highest score)
+  const bestSubmission =
+    quiz.submissions && quiz.submissions.length > 0
+      ? quiz.submissions.sort((a, b) => (b.grade || 0) - (a.grade || 0))[0]
+      : null;
 
   return (
     <div className="space-y-6">
@@ -137,6 +173,12 @@ export function QuizDetails({
                   : "No Limit"}
               </span>
             </div>
+            {quiz.maxAttempts && (
+              <div className="flex items-center text-sm">
+                <GitBranch className="text-muted-foreground mr-1.5 h-4 w-4" />
+                <span>max attempts: {quiz.maxAttempts}</span>
+              </div>
+            )}
           </div>
 
           {quiz.description && (
@@ -146,10 +188,42 @@ export function QuizDetails({
               ))}
             </div>
           )}
-
-          <Button>Start</Button>
+          {canStartQuiz && (
+            <Button
+              onClick={() => mutate({ id: quizId, sectionId })}
+              disabled={isStarting}
+              className="mt-4"
+            >
+              {isStarting ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Starting...
+                </>
+              ) : canResume ? (
+                "Resume Quiz"
+              ) : canRetry ? (
+                "Retry Quiz"
+              ) : (
+                "Start Quiz"
+              )}
+            </Button>
+          )}
+          {quiz.submissions.length > 0 && (
+            <p className="text-muted-foreground text-sm">
+              You have submitted this quiz {quiz.submissions.length} time
+              {quiz.submissions.length > 1 ? "s" : ""} before.
+            </p>
+          )}
         </CardContent>
       </Card>
+
+      {/* Show Last Submission Results */}
+      {bestSubmission && (
+        <BestQuizSubmission
+          submission={bestSubmission}
+          totalPoints={quiz.points}
+        />
+      )}
     </div>
   );
 }

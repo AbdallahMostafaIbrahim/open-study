@@ -144,7 +144,7 @@ export default async function CourseAlerts({ id }: { id: number }) {
               </CardTitle>
             </CardHeader>
             <CardContent className="py-4">
-              <p className="text-3xl font-bold">{section._count.quizes}</p>
+              <p className="text-3xl font-bold">{section._count.quizzes}</p>
             </CardContent>
           </Card>
         </Link>

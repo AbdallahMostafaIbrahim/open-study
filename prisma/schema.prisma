@@ -309,11 +309,11 @@ model QuizQuestion {
 }
 
 model QuizAnswer {
-    id     String   @id @default(cuid())
-    answer String[] @default([])
-    grade  Float?
-    isTouched Boolean @default(false)
-    index  Int
+    id        String   @id @default(cuid())
+    answer    String[] @default([])
+    grade     Float?
+    isTouched Boolean  @default(false)
+    index     Int
 
     quizQuestionId String
     quizQuestion   QuizQuestion @relation(fields: [quizQuestionId], references: [id], onDelete: Cascade)
@@ -323,14 +323,15 @@ model QuizAnswer {
 }
 
 model QuizSubmission {
-    id            String    @id @default(cuid())
-    date          DateTime  @default(now())
-    grade         Float?
-    feedback      String?
-    isGradePosted Boolean   @default(false)
-    attempt       Int       @default(0)
-    startedAt     DateTime? @default(now())
-    finishedAt    DateTime?
+    id                   String    @id @default(cuid())
+    date                 DateTime  @default(now())
+    grade                Float?
+    feedback             String?
+    isGradePosted        Boolean   @default(false)
+    attempt              Int       @default(0)
+    startedAt            DateTime  @default(now())
+    finishedAt           DateTime?
+    currentQuestionIndex Int?      @default(0)
 
     quizId String
     quiz   Quiz   @relation(fields: [quizId], references: [id], onDelete: Cascade)
@@ -339,7 +340,6 @@ model QuizSubmission {
     student   Student      @relation(fields: [studentId], references: [userId], onDelete: Cascade)
     answers   QuizAnswer[]
 }
-
 
 model Semester {
     id             Int             @id @default(autoincrement())
