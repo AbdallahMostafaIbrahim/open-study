@@ -2,8 +2,8 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Tabs, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import { ScrollArea, ScrollBar } from "~/components/ui/scroll-area"; // Import ScrollArea and ScrollBar
+import { Tabs, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import { cn } from "~/lib/utils"; // Make sure you have this utility
 
 const TabsLinkTrigger: React.FC<{
@@ -54,9 +54,6 @@ export const CourseTabs = ({ id }: { id: number }) => {
           </TabsLinkTrigger>
           <TabsLinkTrigger href={`/courses/${id}/students`}>
             Students
-          </TabsLinkTrigger>
-          <TabsLinkTrigger href={`/courses/${id}/grades`}>
-            Grades
           </TabsLinkTrigger>
         </TabsList>
         <ScrollBar orientation="horizontal" className="h-2.5" />

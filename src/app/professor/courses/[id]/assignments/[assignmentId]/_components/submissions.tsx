@@ -145,7 +145,7 @@ export function Submission({
 
       <div className="ml-auto flex flex-col items-end gap-1">
         {/* Grade status indicator */}
-        {latestSubmission.grade ? (
+        {latestSubmission.grade.grade ? (
           <Badge variant="default" className="bg-green-600 hover:bg-green-700">
             Graded: {latestSubmission.grade.grade}
           </Badge>

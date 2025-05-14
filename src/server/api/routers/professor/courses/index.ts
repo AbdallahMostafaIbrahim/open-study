@@ -51,6 +51,18 @@ export const coursesRouter = createTRPCRouter({
             },
           },
         },
+        students: {
+          select: {
+            id: true,
+            isActive: true,
+            student: {
+              select: {
+                user: { select: { name: true, email: true, image: true } },
+                studentId: true,
+              },
+            },
+          },
+        },
         _count: {
           select: {
             students: true,

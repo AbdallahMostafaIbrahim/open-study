@@ -1,3 +1,5 @@
+import { Bot, Calendar, Home, LibraryBig, Settings } from "lucide-react";
+import Link from "next/link";
 import {
   Sidebar,
   SidebarContent,
@@ -7,11 +9,9 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "~/components/ui/sidebar";
-import { Bot, Calendar, Home, LibraryBig, Settings } from "lucide-react";
-import Link from "next/link";
 import { auth } from "~/server/auth";
-import { MySidebarHeader } from "./common/header";
 import { MySidebarFooter } from "./common/footer";
+import { MySidebarHeader } from "./common/header";
 
 // Menu items.
 const items = [
@@ -29,11 +29,13 @@ const items = [
     title: "Calendar",
     url: "/professor/calendar",
     icon: Calendar,
+    disabled: true,
   },
   {
     title: "Settings",
     url: "/professor/settings",
     icon: Settings,
+    disabled: true,
   },
 ];
 
@@ -51,11 +53,21 @@ export async function ProfessorSidebar() {
             <SidebarMenu>
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild>
-                    <Link href={item.url}>
-                      <item.icon />
-                      <span>{item.title}</span>
-                    </Link>
+                  <SidebarMenuButton
+                    className={item.disabled ? "opacity-70" : ""}
+                    asChild
+                  >
+                    {item.disabled ? (
+                      <div>
+                        <item.icon />
+                        <span>{item.title}</span>
+                      </div>
+                    ) : (
+                      <Link href={item.url}>
+                        <item.icon />
+                        <span>{item.title}</span>
+                      </Link>
+                    )}
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
