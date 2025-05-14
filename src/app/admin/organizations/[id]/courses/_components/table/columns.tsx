@@ -12,6 +12,11 @@ export const columns: ColumnDef<Course>[] = [
   {
     header: "Description",
     accessorFn: (row) => row.description,
+    cell({ row }) {
+      return (
+        <div className="max-w-[300px] truncate">{row.original.description}</div>
+      );
+    },
   },
   {
     header: "Sections",

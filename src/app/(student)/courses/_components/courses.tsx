@@ -38,7 +38,7 @@ export function CoursesList() {
             </CardHeader>
 
             <CardContent className="flex-grow">
-              <p className="text-muted-foreground text-sm">
+              <p className="text-muted-foreground line-clamp-3 text-sm">
                 {course.course.description || "No description available."}
               </p>
             </CardContent>

@@ -1,16 +1,16 @@
 "use client";
 
-import { api } from "~/trpc/react";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-  CardFooter,
-} from "~/components/ui/card";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "~/components/ui/card";
+import { api } from "~/trpc/react";
 
 export function CoursesList() {
   const [data] = api.professor.courses.get.useSuspenseQuery();
@@ -38,7 +38,7 @@ export function CoursesList() {
             </CardHeader>
 
             <CardContent className="flex-grow">
-              <p className="text-muted-foreground text-sm">
+              <p className="text-muted-foreground line-clamp-3 text-sm">
                 {course.course.description || "No description available."}
               </p>
             </CardContent>
