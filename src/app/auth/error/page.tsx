@@ -63,7 +63,15 @@ const errorMessages: Record<string, { title: string; description: string }> = {
   },
 };
 
-export default function AuthErrorPage() {
+export default function ErrorPage() {
+  return (
+    <Suspense>
+      <AuthErrorPage />
+    </Suspense>
+  );
+}
+
+function AuthErrorPage() {
   const searchParams = useSearchParams();
   const [error, setError] = useState<string | null>(null);
   const [errorDetails, setErrorDetails] = useState(errorMessages.default);
