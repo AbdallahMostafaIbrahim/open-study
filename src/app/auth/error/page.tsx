@@ -3,7 +3,7 @@
 import { AlertCircle, ArrowLeft, Home, ShieldAlert } from "lucide-react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { Alert, AlertDescription, AlertTitle } from "~/components/ui/alert";
 import { Button } from "~/components/ui/button";
 import {
@@ -82,50 +82,52 @@ export default function AuthErrorPage() {
   }, [searchParams]);
 
   return (
-    <div className="flex h-[100vh] items-center justify-center">
-      <Card className="mx-auto max-w-md shadow-lg">
-        <CardHeader className="space-y-1">
-          <div className="flex items-center justify-center">
-            <ShieldAlert className="h-10 w-10 text-red-500" />
-          </div>
-          <CardTitle className="text-center text-2xl">
-            {errorDetails?.title}
-          </CardTitle>
-          <CardDescription className="text-center">
-            There was a problem with your authentication request
-          </CardDescription>
-        </CardHeader>
-
-        <CardContent>
-          <Alert variant="destructive" className="mb-4">
-            <AlertCircle className="h-4 w-4" />
-            <AlertTitle>Error</AlertTitle>
-            <AlertDescription>{errorDetails?.description}</AlertDescription>
-          </Alert>
-
-          {error && (
-            <div className="bg-muted rounded-md p-3 font-mono text-xs">
-              <code>Error: {error}</code>
+    <Suspense>
+      <div className="flex h-[100vh] items-center justify-center">
+        <Card className="mx-auto max-w-md shadow-lg">
+          <CardHeader className="space-y-1">
+            <div className="flex items-center justify-center">
+              <ShieldAlert className="h-10 w-10 text-red-500" />
             </div>
-          )}
-        </CardContent>
+            <CardTitle className="text-center text-2xl">
+              {errorDetails?.title}
+            </CardTitle>
+            <CardDescription className="text-center">
+              There was a problem with your authentication request
+            </CardDescription>
+          </CardHeader>
 
-        <CardFooter className="flex flex-col gap-2">
-          <Button asChild className="w-full">
-            <Link href="/">
-              <Home className="mr-2 h-4 w-4" />
-              Go back home
-            </Link>
-          </Button>
+          <CardContent>
+            <Alert variant="destructive" className="mb-4">
+              <AlertCircle className="h-4 w-4" />
+              <AlertTitle>Error</AlertTitle>
+              <AlertDescription>{errorDetails?.description}</AlertDescription>
+            </Alert>
 
-          <Button variant="outline" asChild className="w-full">
-            <Link href="/auth/sign-in">
-              <ArrowLeft className="mr-2 h-4 w-4" />
-              Return to sign in
-            </Link>
-          </Button>
-        </CardFooter>
-      </Card>
-    </div>
+            {error && (
+              <div className="bg-muted rounded-md p-3 font-mono text-xs">
+                <code>Error: {error}</code>
+              </div>
+            )}
+          </CardContent>
+
+          <CardFooter className="flex flex-col gap-2">
+            <Button asChild className="w-full">
+              <Link href="/">
+                <Home className="mr-2 h-4 w-4" />
+                Go back home
+              </Link>
+            </Button>
+
+            <Button variant="outline" asChild className="w-full">
+              <Link href="/auth/sign-in">
+                <ArrowLeft className="mr-2 h-4 w-4" />
+                Return to sign in
+              </Link>
+            </Button>
+          </CardFooter>
+        </Card>
+      </div>
+    </Suspense>
   );
 }
