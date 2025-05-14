@@ -1,11 +1,11 @@
 "use client";
 
 import { useChat } from "@ai-sdk/react";
+import { Fragment } from "react";
+import { ScrollArea } from "~/components/ui/scroll-area";
 import { ChatInput } from "./_components/input";
 import { PreviewMessage, ThinkingMessage } from "./_components/message";
 import { Overview } from "./_components/overview";
-import { ScrollArea } from "~/components/ui/scroll-area";
-import { Fragment } from "react";
 
 export default function Chat() {
   const {
@@ -18,7 +18,7 @@ export default function Chat() {
     status,
     stop,
   } = useChat({
-    maxSteps: 5,
+    maxSteps: 10,
   });
 
   return (

@@ -1,6 +1,6 @@
+import { QuestionType } from "@prisma/client";
 import { z } from "zod";
 import { createTRPCRouter, professorProcedure } from "~/server/api/trpc";
-import { QuestionType } from "@prisma/client";
 
 export const quizzesRouter = createTRPCRouter({
   get: professorProcedure
@@ -22,7 +22,7 @@ export const quizzesRouter = createTRPCRouter({
           isPublished: true,
           _count: {
             select: {
-              submissions: true,
+              submissions: { where: { attempt: 1 } },
               questions: true,
             },
           },
@@ -52,7 +52,7 @@ export const quizzesRouter = createTRPCRouter({
           durationInSeconds: true,
           _count: {
             select: {
-              submissions: true,
+              submissions: { where: { attempt: 1 } },
             },
           },
           questions: {

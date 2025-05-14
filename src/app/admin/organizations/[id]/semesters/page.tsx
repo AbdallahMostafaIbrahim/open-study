@@ -1,13 +1,13 @@
 import { Suspense } from "react";
-import { AddSemesterDialog } from "./_components/add";
-import { columns } from "./_components/columns";
-import { SemestersDataTable } from "./_components/data-table";
 import TableSkeleton, {
   type TableSkeletonProps,
 } from "~/components/table-skeleton";
 import { api, HydrateClient } from "~/trpc/server";
+import { AddSemesterDialog } from "./_components/add";
+import { columns } from "./_components/columns";
+import { SemestersDataTable } from "./_components/data-table";
 
-export const skeletonColumns: TableSkeletonProps["columns"] = [
+const skeletonColumns: TableSkeletonProps["columns"] = [
   { key: "name", width: "w-[150px]", align: "left" },
   { key: "startsAt", width: "w-[100px]", align: "left" },
   { key: "endsAt", width: "w-[100px]", align: "left" },

@@ -1,11 +1,111 @@
 "use client";
 
+import { File, FileImage, FileText, Loader2, Paperclip, X } from "lucide-react";
 import { motion } from "motion/react";
+import Image from "next/image";
+import { useState } from "react";
+import { Button } from "~/components/ui/button";
 
-import { Markdown } from "./markdown";
-import { cn } from "~/lib/utils";
-import { Sparkles } from "lucide-react";
 import type { Message } from "ai";
+import { Sparkles } from "lucide-react";
+import { cn } from "~/lib/utils";
+import { Markdown } from "./markdown";
+
+interface AttachmentProps {
+  attachment: {
+    name?: string;
+    url: string;
+    type?: string;
+  };
+}
+
+export const PreviewAttachment = ({ attachment }: AttachmentProps) => {
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(false);
+
+  // Determine the attachment type
+  const fileType =
+    attachment.type || attachment.url.split(".").pop()?.toLowerCase();
+  const isImage =
+    fileType && ["jpg", "jpeg", "png", "gif", "webp", "svg"].includes(fileType);
+  const isPdf = fileType === "pdf";
+  const isText = fileType && ["txt", "md", "json", "csv"].includes(fileType);
+
+  // Format file name for display
+  const fileName = attachment.name || attachment.url.split("/").pop() || "File";
+
+  // Handle image loading events
+  const handleImageLoad = () => setIsLoading(false);
+  const handleImageError = () => {
+    setIsLoading(false);
+    setError(true);
+  };
+
+  return (
+    <div className="group bg-card relative flex flex-col rounded-md border shadow-sm">
+      {/* Image preview */}
+      {isImage && (
+        <div className="relative flex h-32 w-32 items-center justify-center overflow-hidden rounded-t-md bg-black/5">
+          {isLoading && (
+            <div className="absolute inset-0 flex items-center justify-center">
+              <Loader2 className="text-muted-foreground h-5 w-5 animate-spin" />
+            </div>
+          )}
+
+          <Image
+            src={attachment.url}
+            alt={fileName}
+            className={cn(
+              "h-full w-full object-cover transition-opacity",
+              isLoading ? "opacity-0" : "opacity-100",
+            )}
+            width={128}
+            height={128}
+            onLoad={handleImageLoad}
+            onError={handleImageError}
+          />
+
+          {error && (
+            <div className="bg-muted absolute inset-0 flex items-center justify-center">
+              <FileImage className="text-muted-foreground h-8 w-8" />
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* PDF or document preview */}
+      {!isImage && (
+        <div className="bg-muted flex h-32 w-32 items-center justify-center rounded-t-md">
+          {isPdf ? (
+            <FileText className="text-muted-foreground h-10 w-10" />
+          ) : isText ? (
+            <FileText className="text-muted-foreground h-10 w-10" />
+          ) : (
+            <File className="text-muted-foreground h-10 w-10" />
+          )}
+        </div>
+      )}
+
+      {/* File info */}
+      <div className="flex w-full items-center justify-between gap-1 p-2">
+        <div className="truncate text-xs">{fileName}</div>
+
+        {/* Download button */}
+        <a
+          href={attachment.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          download={fileName}
+          className="ml-auto"
+        >
+          <Button variant="ghost" size="icon" className="h-6 w-6">
+            <Paperclip className="h-3 w-3" />
+          </Button>
+        </a>
+      </div>
+    </div>
+  );
+};
 
 export const PreviewMessage = ({ message }: { message: Message }) => {
   return (
@@ -91,7 +191,7 @@ export const PreviewMessage = ({ message }: { message: Message }) => {
             </div>
           )}
 
-          {/* {message.experimental_attachments && (
+          {message.experimental_attachments && (
             <div className="flex flex-row gap-2">
               {message.experimental_attachments.map((attachment) => (
                 <PreviewAttachment
@@ -100,7 +200,7 @@ export const PreviewMessage = ({ message }: { message: Message }) => {
                 />
               ))}
             </div>
-          )} */}
+          )}
         </div>
       </div>
     </motion.div>

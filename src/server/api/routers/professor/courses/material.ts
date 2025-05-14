@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { generateEmbeddingsFromPdf } from "~/lib/ai/embeddings";
 import { createTRPCRouter, professorProcedure } from "~/server/api/trpc";
 
 export const materialRouter = createTRPCRouter({
@@ -81,7 +82,7 @@ export const materialRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      return await ctx.db.material.create({
+      await ctx.db.material.create({
         data: {
           title: input.title,
           text: input.text,
@@ -101,6 +102,13 @@ export const materialRouter = createTRPCRouter({
           },
         },
       });
+
+      // Create embeddings for the text if the files are pdfs
+      for (const file of input.files || []) {
+        if (file.fileType === "application/pdf") {
+          generateEmbeddingsFromPdf(file.fileKey);
+        }
+      }
     }),
   publish: professorProcedure
     .input(

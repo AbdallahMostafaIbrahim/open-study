@@ -1,15 +1,15 @@
 import { Suspense } from "react";
 import { AddProfessorDialog } from "./_components/add";
 
-import { columns } from "./_components/table/columns";
-import { DataTable } from "./_components/table/data-table";
 import TableSkeleton, {
   type TableSkeletonProps,
 } from "~/components/table-skeleton";
+import { columns } from "./_components/table/columns";
+import { DataTable } from "./_components/table/data-table";
 
 import { api, HydrateClient } from "~/trpc/server";
 
-export const skeletonColumns: TableSkeletonProps["columns"] = [
+const skeletonColumns: TableSkeletonProps["columns"] = [
   { key: "name", width: "w-[150px]", align: "left" },
   { key: "email", width: "w-[100px]", align: "left" },
   { key: "professorId", width: "w-[100px]", align: "left" },

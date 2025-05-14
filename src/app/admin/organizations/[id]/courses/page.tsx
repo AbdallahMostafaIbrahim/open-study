@@ -1,14 +1,14 @@
-import { columns } from "./_components/table/columns";
-import { DataTable } from "./_components/table/data-table";
-import { api, HydrateClient } from "~/trpc/server";
+import Link from "next/link";
 import { Suspense } from "react";
 import TableSkeleton, {
   type TableSkeletonProps,
 } from "~/components/table-skeleton";
 import { Button } from "~/components/ui/button";
-import Link from "next/link";
+import { api, HydrateClient } from "~/trpc/server";
+import { columns } from "./_components/table/columns";
+import { DataTable } from "./_components/table/data-table";
 
-export const skeletonColumns: TableSkeletonProps["columns"] = [
+const skeletonColumns: TableSkeletonProps["columns"] = [
   { key: "name", width: "w-[150px]", align: "left" },
   { key: "description", width: "w-[100px]", align: "left" },
   { key: "sections", width: "w-[100px]", align: "left" },

@@ -1,8 +1,13 @@
-import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
+import {
+  GetObjectCommand,
+  PutObjectCommand,
+  S3Client,
+} from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-
+import axios from "axios";
 import { v4 as uuid } from "uuid";
 import { env } from "~/env";
+import { S3_URL } from "./constants";
 
 const s3 = new S3Client({
   region: env.NEXT_PUBLIC_S3_REGION,
@@ -31,4 +36,11 @@ export async function getS3PresignedURL({
     console.error("Error uploading file to S3:", error);
     throw new Error("Failed to upload file");
   }
+}
+
+export async function downloadFileFromKey(fileKey: string): Promise<Buffer> {
+  const response = await axios.get(S3_URL + fileKey, {
+    responseType: "arraybuffer",
+  });
+  return Buffer.from(response.data, "binary");
 }
