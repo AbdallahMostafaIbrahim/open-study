@@ -2,7 +2,7 @@ import { createTRPCRouter, studentProcedure } from "~/server/api/trpc";
 
 export const chatRouter = createTRPCRouter({
   getMaterial: studentProcedure.query(async ({ ctx, input }) => {
-    return await ctx.db.materialFile.findMany({
+    const materialFiles = await ctx.db.materialFile.findMany({
       where: {
         material: {
           courseSection: {
@@ -20,5 +20,35 @@ export const chatRouter = createTRPCRouter({
         type: true,
       },
     });
+
+    const assignmentFiles = await ctx.db.assignmentFile.findMany({
+      where: {
+        assignment: {
+          courseSection: {
+            students: {
+              some: {
+                studentId: ctx.session.user.id,
+              },
+            },
+          },
+        },
+      },
+      select: {
+        link: true,
+        name: true,
+        type: true,
+      },
+    });
+
+    return [
+      ...materialFiles.map((file) => ({
+        ...file,
+        type: "material",
+      })),
+      ...assignmentFiles.map((file) => ({
+        ...file,
+        type: "assignment",
+      })),
+    ];
   }),
 });
