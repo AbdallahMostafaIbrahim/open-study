@@ -115,7 +115,19 @@ export async function POST(req: Request) {
               },
             },
           });
-          return assignments;
+          // make the links absolute
+          const absoluteLinks = assignments.map((assignment) => {
+            return {
+              ...assignment,
+              files: assignment.files.map((file) => ({
+                ...file,
+                link: S3_URL + file.link,
+              })),
+              grades: assignment.grades[0] || null,
+              submissions: assignment.submissions[0] || null,
+            };
+          });
+          return absoluteLinks;
         },
       }),
       getAnnouncements: tool({
