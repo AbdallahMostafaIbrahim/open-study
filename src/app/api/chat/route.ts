@@ -100,7 +100,9 @@ export async function POST(req: Request) {
             select: {
               title: true,
               dueDate: true,
-              grades: true,
+              grades: {
+                where: { studentId: session.user.id },
+              },
               submissions: true,
               points: true,
               text: true,
