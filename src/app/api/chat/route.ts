@@ -103,7 +103,7 @@ export async function POST(req: Request) {
               grades: {
                 where: { studentId: session.user.id },
               },
-              submissions: true,
+              submissions: { where: { studentId: session.user.id } },
               points: true,
               text: true,
               files: {
